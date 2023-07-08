@@ -13,10 +13,10 @@ namespace Ahlatci.Shop.Domain.Entities
         public string Phone { get; set; }        
         public DateTime Birtdate { get; set; }
         public Gender Gender { get; set; }
+        public string Adress { get; set; }
 
         public Account Account { get; set; }
         public ICollection<Order> Orders { get; set; }
-        public ICollection<Address> Addresses { get; set; }
         public ICollection<Comment> Comments { get; set; }
     }
 
