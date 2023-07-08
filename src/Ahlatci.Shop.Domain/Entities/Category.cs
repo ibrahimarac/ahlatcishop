@@ -11,3 +11,5 @@ namespace Ahlatci.Shop.Domain.Entities
 
     }
 }
+
+

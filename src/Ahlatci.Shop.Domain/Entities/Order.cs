@@ -5,11 +5,12 @@ namespace Ahlatci.Shop.Domain.Entities
     public class Order : AuditableEntity
     {
         public int CustomerId { get; set; }
-        public string Address { get; set; }
-        public DateTime OrderDate { get; set; }
+        public int AddressId { get; set; }
+        public DateTime? OrderDate { get; set; }
         public OrderStatus Status { get; set; }
 
         public Customer Customer { get; set; }
+        public Address Address { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
     }
 

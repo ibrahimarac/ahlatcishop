@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Ahlatci.Shop.Persistence.Mappings.AuditableEntityMapping&lt;T&gt;">
+    <Position X="1" Y="1.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mappings\AuditableEntityMapping.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ahlatci.Shop.Persistence.Mappings.BaseEntityMapping&lt;T&gt;">
+    <Position X="18.25" Y="1.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mappings\BaseEntityMapping.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ahlatci.Shop.Persistence.Mappings.AccountMapping">
+    <Position X="19.25" Y="4.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mappings\AccountMapping.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ahlatci.Shop.Persistence.Mappings.CategoryMapping">
+    <Position X="0.5" Y="4.75" Width="2" />
+    <InheritanceLine Type="Ahlatci.Shop.Persistence.Mappings.AuditableEntityMapping&lt;T&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="2.125" Y="2.546" />
+        <Point X="2.125" Y="4.375" />
+        <Point X="1.45" Y="4.375" />
+        <Point X="1.45" Y="4.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mappings\CategoryMapping.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ahlatci.Shop.Persistence.Mappings.CommentMapping">
+    <Position X="2.75" Y="4.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mappings\CommentMapping.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ahlatci.Shop.Persistence.Mappings.AddressMapping">
+    <Position X="16.5" Y="4.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mappings\AddressMapping.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ahlatci.Shop.Persistence.Mappings.CustomerMapping">
+    <Position X="5" Y="4.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mappings\CustomerMapping.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ahlatci.Shop.Persistence.Mappings.OrderDetailMapping">
+    <Position X="7.25" Y="4.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mappings\OrderDetailMapping.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ahlatci.Shop.Persistence.Mappings.OrderMapping">
+    <Position X="9.5" Y="4.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mappings\OrderMapping.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ahlatci.Shop.Persistence.Mappings.ProductImageMapping">
+    <Position X="11.5" Y="4.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mappings\ProductImageMapping.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ahlatci.Shop.Persistence.Mappings.ProductMapping">
+    <Position X="13.5" Y="4.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mappings\ProductMapping.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
