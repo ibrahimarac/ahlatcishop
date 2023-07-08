@@ -44,6 +44,8 @@ namespace Ahlatci.Shop.Persistence.Mappings
                 .WithMany(x => x.Comments)
                 .HasForeignKey(x => x.CustomerId)
                 .HasConstraintName("COMMENT_CUSTOMER_CUSTOMER_ID");
+
+            builder.ToTable("COMMENTS");
         }
     }
 }

@@ -65,6 +65,8 @@ namespace Ahlatci.Shop.Persistence.Mappings
                 .WithMany(x => x.Customers)
                 .HasForeignKey(x => x.CityId)
                 .HasConstraintName("CUSTOMER_CITY_CITY_ID");
+
+            builder.ToTable("CUSTOMERS");
         }
     }
 }
