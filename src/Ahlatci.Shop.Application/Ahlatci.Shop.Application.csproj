@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Ahlatci.Shop.Persistence\Ahlatci.Shop.Persistence.csproj" />
+  </ItemGroup>
+
 </Project>

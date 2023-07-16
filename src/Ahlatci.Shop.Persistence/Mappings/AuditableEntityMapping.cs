@@ -29,7 +29,7 @@ namespace Ahlatci.Shop.Persistence.Mappings
                 .HasColumnName("MODIFIED_DATE")
                 .HasColumnOrder(28);
 
-            builder.Property(x => x.CreatedBy)
+            builder.Property(x => x.ModifiedBy)
                 .HasColumnName("MODIFIED_BY")
                 .HasColumnOrder(29);
 

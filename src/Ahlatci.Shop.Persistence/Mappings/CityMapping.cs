@@ -13,6 +13,8 @@ namespace Ahlatci.Shop.Persistence.Mappings
                 .HasColumnType("nvarchar(20)")
                 .HasColumnOrder(2)
                 .IsRequired();
+
+            builder.ToTable("CITIES");
         }
     }
 }

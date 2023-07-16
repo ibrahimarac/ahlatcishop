@@ -28,7 +28,9 @@ namespace Ahlatci.Shop.Persistence.Mappings
             builder.HasOne(x => x.Customer)
                 .WithMany(x => x.Orders)
                 .HasForeignKey(x => x.CustomerId)
-                .HasConstraintName("ORDER_CUSTOMER_CUSTOMER_ID");
+                .HasConstraintName("ORDER_CUSTOMER_CUSTOMER_ID")
+                .OnDelete(DeleteBehavior.NoAction);
+
 
             builder.HasOne(x => x.Address)
                 .WithMany(x => x.Orders)

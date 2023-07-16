@@ -26,7 +26,7 @@ namespace Ahlatci.Shop.Persistence.Mappings
                 .HasColumnName("LIKE_COUNT")
                 .HasColumnOrder(5);
 
-            builder.Property(x => x.LikeCount)
+            builder.Property(x => x.DislikeCount)
                 .HasColumnName("DISLIKE_COUNT")
                 .HasColumnOrder(6);
 

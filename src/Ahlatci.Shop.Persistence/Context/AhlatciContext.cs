@@ -41,6 +41,8 @@ namespace Ahlatci.Shop.Persistence.Context
 
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
         {
+            //Herhangi bir kayıt işleminde yapılan işlem ekleme ise CreateDate ve CreatedBy bilgileri otomatik olarak set edilir.
+            //Herhangi bir kayıt işleminde yapılan işlem güncelleme ise ModifiedDate ve ModifiedBy bilgileri otomatik olarak set edilir.
             foreach (var entry in ChangeTracker.Entries<AuditableEntity>().ToList())
             {
                 switch (entry.State)
