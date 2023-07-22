@@ -19,7 +19,7 @@ namespace Ahlatci.Shop.Api.Controllers
             _categoryService = categoryService;
         }
 
-        [HttpGet("getAll")]
+        [HttpGet("get")]
         public async Task<List<CategoryDto>> GetAllCategories()
         {
             var categories = await _categoryService.GetAllCategories();

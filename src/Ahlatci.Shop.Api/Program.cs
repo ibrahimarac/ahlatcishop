@@ -1,7 +1,9 @@
+using Ahlatci.Shop.Application.Automap;
 using Ahlatci.Shop.Application.Services.Abstraction;
 using Ahlatci.Shop.Application.Services.Implementation;
 using Ahlatci.Shop.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +21,8 @@ builder.Services.AddDbContext<AhlatciContext>(opt =>
 //Business Service Registiration
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 
-
+//Automapper
+builder.Services.AddAutoMapper(typeof(DomainToDto), typeof(ViewModelToDomain));
 
 
 
