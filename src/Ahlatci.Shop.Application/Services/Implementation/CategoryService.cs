@@ -1,6 +1,8 @@
-﻿using Ahlatci.Shop.Application.Models.Dtos;
+﻿using Ahlatci.Shop.Application.Exceptions;
+using Ahlatci.Shop.Application.Models.Dtos;
 using Ahlatci.Shop.Application.Models.RequestModels;
 using Ahlatci.Shop.Application.Services.Abstraction;
+using Ahlatci.Shop.Application.Validators.Categories;
 using Ahlatci.Shop.Application.Wrapper;
 using Ahlatci.Shop.Domain.Entities;
 using Ahlatci.Shop.Persistence.Context;
@@ -50,10 +52,18 @@ namespace Ahlatci.Shop.Application.Services.Implementation
 
             var result = new Result<CategoryDto>();
 
+            //Request model doğrulaması - Fluent Validation
+            var validator = new GetCategoryByIdValidator();
+            var validationResult = validator.Validate(getCategoryByIdVM);
+            if (!validationResult.IsValid)
+            {
+                throw new ValidateException(validationResult);
+            }
+
             var categoryExists = await _context.Categories.AnyAsync(x=>x.Id == getCategoryByIdVM.Id);
             if (!categoryExists)
             {
-                throw new Exception($"{getCategoryByIdVM.Id} numaralı kategori bulunamadı.");
+                throw new NotFoundException($"{getCategoryByIdVM.Id} numaralı kategori bulunamadı.");
             }
 
             var categoryDto = await _context.Categories
@@ -73,6 +83,14 @@ namespace Ahlatci.Shop.Application.Services.Implementation
 
             var result = new Result<int>();
 
+            //Request model doğrulaması - Fluent Validation
+            var validator = new CreateCategoryValidator();
+            var validationResult = validator.Validate(createCategoryVM);
+            if (!validationResult.IsValid)
+            {
+                throw new ValidateException(validationResult);
+            }
+
             var categoryEntity = _mapper.Map<CreateCategoryVM, Category>(createCategoryVM);
 
             //Üretilen entity kategori koleksiyonuna ekleniyor
@@ -91,7 +109,15 @@ namespace Ahlatci.Shop.Application.Services.Implementation
             var categoryExists = await _context.Categories.AnyAsync(x => x.Id == deleteCategoryVM.Id);
             if (!categoryExists)
             {
-                throw new Exception($"{deleteCategoryVM.Id} numaralı kategori bulunamadı.");
+                throw new NotFoundException($"{deleteCategoryVM.Id} numaralı kategori bulunamadı.");
+            }
+
+            //Request model doğrulaması - Fluent Validation
+            var validator = new DeleteCategoryValidator();
+            var validationResult = validator.Validate(deleteCategoryVM);
+            if (!validationResult.IsValid)
+            {
+                throw new ValidateException(validationResult);
             }
 
             //Veritabanında kayıtlı kategoriyi getirelim.
@@ -115,6 +141,14 @@ namespace Ahlatci.Shop.Application.Services.Implementation
             if (!categoryExists)
             {
                 throw new Exception($"{updateCategoryVM} numaralı kategori bulunamadı.");
+            }
+
+            //Request model doğrulaması - Fluent Validation
+            var validator = new UpdateCategoryValidator();
+            var validationResult = validator.Validate(updateCategoryVM);
+            if (!validationResult.IsValid)
+            {
+                throw new ValidateException(validationResult);
             }
 
             var updatedCategory = _mapper.Map<UpdateCategoryVM, Category>(updateCategoryVM);
