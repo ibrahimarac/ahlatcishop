@@ -1,15 +1,19 @@
-using Ahlatci.Shop.Application.Automap;
+using Ahlatci.Shop.Api.Filters;
+using Ahlatci.Shop.Application.Automappings;
 using Ahlatci.Shop.Application.Services.Abstraction;
 using Ahlatci.Shop.Application.Services.Implementation;
 using Ahlatci.Shop.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(opt =>
+{
+    opt.Filters.Add(new ExceptionHandlerFilter());
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
