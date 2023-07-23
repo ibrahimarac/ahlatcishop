@@ -9,6 +9,7 @@ using Ahlatci.Shop.Persistence.Context;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using Ahlatci.Shop.Application.Behaviors;
 
 namespace Ahlatci.Shop.Application.Services.Implementation
 {
@@ -41,24 +42,11 @@ namespace Ahlatci.Shop.Application.Services.Implementation
             return result;
         }
 
+
+        [ValidationBehavior(typeof(GetCategoryByIdValidator))]
         public async Task<Result<CategoryDto>> GetCategoryById(GetCategoryByIdVM getCategoryByIdVM)
         {
-            //var categoryEntity = await _context.Categories.FindAsync(id);
-            //var categoryDto = new CategoryDto
-            //{
-            //    Id = id,
-            //    Name = categoryEntity.Name
-            //};
-
             var result = new Result<CategoryDto>();
-
-            //Request model doğrulaması - Fluent Validation
-            var validator = new GetCategoryByIdValidator();
-            var validationResult = validator.Validate(getCategoryByIdVM);
-            if (!validationResult.IsValid)
-            {
-                throw new ValidateException(validationResult);
-            }
 
             var categoryExists = await _context.Categories.AnyAsync(x=>x.Id == getCategoryByIdVM.Id);
             if (!categoryExists)
@@ -74,22 +62,11 @@ namespace Ahlatci.Shop.Application.Services.Implementation
             return result;
         }
 
+
+        [ValidationBehavior(typeof(CreateCategoryValidator))]
         public async Task<Result<int>> CreateCategory(CreateCategoryVM createCategoryVM)
-        {
-            //var categoryEntity = new Category
-            //{
-            //    Name = createCategoryVM.CategoryName
-            //};
-
+        {            
             var result = new Result<int>();
-
-            //Request model doğrulaması - Fluent Validation
-            var validator = new CreateCategoryValidator();
-            var validationResult = validator.Validate(createCategoryVM);
-            if (!validationResult.IsValid)
-            {
-                throw new ValidateException(validationResult);
-            }
 
             var categoryEntity = _mapper.Map<CreateCategoryVM, Category>(createCategoryVM);
 
@@ -101,6 +78,8 @@ namespace Ahlatci.Shop.Application.Services.Implementation
             return result;
         }
 
+
+        [ValidationBehavior(typeof(DeleteCategoryValidator))]
         public async Task<Result<int>> DeleteCategory(DeleteCategoryVM deleteCategoryVM)
         {
             var result = new Result<int>();
@@ -110,14 +89,6 @@ namespace Ahlatci.Shop.Application.Services.Implementation
             if (!categoryExists)
             {
                 throw new NotFoundException($"{deleteCategoryVM.Id} numaralı kategori bulunamadı.");
-            }
-
-            //Request model doğrulaması - Fluent Validation
-            var validator = new DeleteCategoryValidator();
-            var validationResult = validator.Validate(deleteCategoryVM);
-            if (!validationResult.IsValid)
-            {
-                throw new ValidateException(validationResult);
             }
 
             //Veritabanında kayıtlı kategoriyi getirelim.
@@ -132,6 +103,8 @@ namespace Ahlatci.Shop.Application.Services.Implementation
             return result;
         }
 
+
+        [ValidationBehavior(typeof(UpdateCategoryValidator))]
         public async Task<Result<int>> UpdateCategory(UpdateCategoryVM updateCategoryVM)
         {
             var result = new Result<int>();
@@ -141,14 +114,6 @@ namespace Ahlatci.Shop.Application.Services.Implementation
             if (!categoryExists)
             {
                 throw new Exception($"{updateCategoryVM} numaralı kategori bulunamadı.");
-            }
-
-            //Request model doğrulaması - Fluent Validation
-            var validator = new UpdateCategoryValidator();
-            var validationResult = validator.Validate(updateCategoryVM);
-            if (!validationResult.IsValid)
-            {
-                throw new ValidateException(validationResult);
             }
 
             var updatedCategory = _mapper.Map<UpdateCategoryVM, Category>(updateCategoryVM);
