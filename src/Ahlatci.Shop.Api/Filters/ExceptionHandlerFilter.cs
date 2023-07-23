@@ -2,6 +2,7 @@
 using Ahlatci.Shop.Application.Wrapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Serilog;
 
 namespace Ahlatci.Shop.Api.Filters
 {
@@ -29,7 +30,8 @@ namespace Ahlatci.Shop.Api.Filters
             {
                 result.Errors = new List<string> { context.Exception.InnerException != null ? context.Exception.InnerException.Message : context.Exception.Message };
             }
-            
+
+            Log.Error(context.Exception,$"{context.HttpContext.Request.Path} adresi çağrılırken bir hata oluştu.");
 
             context.Result = new JsonResult(result);
             context.HttpContext.Response.StatusCode = 400;

@@ -6,8 +6,21 @@ using Ahlatci.Shop.Application.Validators.Categories;
 using Ahlatci.Shop.Persistence.Context;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//Logging
+var configuration = new ConfigurationBuilder()
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json")
+        .Build();
+
+Log.Logger = new LoggerConfiguration()
+        .ReadFrom.Configuration(configuration)
+        .CreateLogger();
+
+Log.Logger.Information("Program Started...");
 
 // Add services to the container.
 
@@ -36,8 +49,6 @@ builder.Services.AddAutoMapper(typeof(DomainToDto), typeof(ViewModelToDomain));
 
 //FluentValidation Ýstekte gönderilen modele ait property'lerin istenen formatý destekleyip desteklemediðini anlamamýzý saðlar.
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(CreateCategoryValidator));
-
-
 
 var app = builder.Build();
 

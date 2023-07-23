@@ -26,6 +26,7 @@ namespace Ahlatci.Shop.Application.Services.Implementation
 
         //Automapper : Bir modeli başka bir modele çevirmek için kullanılıyor.
 
+        [PerformanceBehavior]
         public async Task<Result<List<CategoryDto>>> GetAllCategories()
         {
             var result = new Result<List<CategoryDto>>();
