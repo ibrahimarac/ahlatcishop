@@ -24,16 +24,10 @@ namespace Ahlatci.Shop.Application.Services.Implementation
             _mapper = mapper;
         }
 
-        //Automapper : Bir modeli başka bir modele çevirmek için kullanılıyor.
-
         [PerformanceBehavior]
         public async Task<Result<List<CategoryDto>>> GetAllCategories()
         {
             var result = new Result<List<CategoryDto>>();
-
-            //var categories = await _context.Categories.ToListAsync();
-            ////_mapper.Map<T1,T2>  T1 tipindeki kaynak objeyi T2 tipindeki hedef objeye çevirir.
-            //var categoryDtos = _mapper.Map<List<Category> ,List<CategoryDto>>(categories);
 
             var categoryDtos = await _context.Categories
                 .ProjectTo<CategoryDto>(_mapper.ConfigurationProvider)
