@@ -38,9 +38,10 @@ namespace Ahlatci.Shop.Persistence.UWork
                     await transaction.RollbackAsync();
                     throw;
                 }
-            }                
+            }
             return true;
         }
+
 
         /// <summary>
         /// Yazılımcı hethangi bir repo üzerinde insert, update, delete veya select yapacaksa
@@ -59,13 +60,46 @@ namespace Ahlatci.Shop.Persistence.UWork
 
             //Eğer bu repo ilgili UnitWork için hiç kullanılmamışsa tanımlı değildir.
             //Burada DI içerisinden bu repo alınır ve bundan sonraki kullanımlarda ihtiyaç olabilir
-            //düşüncesi ile sınıf içerisindeki Dictionary'de saklanır.
-            using (var scope = _serviceProvider.CreateScope())
-            {
-                var repository = scope.ServiceProvider.GetRequiredService<IRepository<T>>();
-                _repositories.Add(typeof(IRepository<T>), repository);
-                return repository;
-            }
+            //düşüncesi ile sınıf içerisindeki Dictionary'de saklanır.            
+            var scope = _serviceProvider.CreateScope();
+            var repository = scope.ServiceProvider.GetRequiredService<IRepository<T>>();
+            _repositories.Add(typeof(IRepository<T>), repository);
+            return repository;
+
         }
+
+
+        #region Dispose
+
+        bool _disposed = false;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                //.Net objelerini kaldır.
+                _context.Dispose();
+            }
+
+            //Kullanılan harici dil kütüphaneleri (.Net ile yazılmamış external kütüphaneler)
+            //Örneğin görüntü işlemi için kullanılacak bir C++ kütüphanesini bellekten at
+
+            _disposed = true;
+        }
+
+        #endregion
+
+
     }
 }

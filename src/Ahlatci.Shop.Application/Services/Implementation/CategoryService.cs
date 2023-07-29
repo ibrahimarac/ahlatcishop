@@ -8,6 +8,8 @@ using Ahlatci.Shop.Application.Wrapper;
 using Ahlatci.Shop.Domain.Entities;
 using Ahlatci.Shop.Domain.UWork;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ahlatci.Shop.Application.Services.Implementation
 {
@@ -27,10 +29,13 @@ namespace Ahlatci.Shop.Application.Services.Implementation
         {
             var result = new Result<List<CategoryDto>>();
 
-            var categoryEntites= await _db.GetRepository<Category>().GetAllAsync();
-            var categoryDtos = _mapper.Map<List<Category>, List<CategoryDto>>(categoryEntites);
+            var categoryEntites = await _db.GetRepository<Category>().GetAllAsync();
+            //categoryEntites = categoryEntites.Where(x => x.Id > 4);
+            var categoryDtos = await categoryEntites.ProjectTo<CategoryDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();           
+            //var categoryDtos = _mapper.Map<List<Category>, List<CategoryDto>>(categoryEntites);
             result.Data = categoryDtos;
-
+            _db.Dispose();
             return result;
         }
 
@@ -47,22 +52,19 @@ namespace Ahlatci.Shop.Application.Services.Implementation
                 throw new NotFoundException($"{getCategoryByIdVM.Id} numaralı kategori bulunamadı.");
             }
 
-            //var categoryDto = await _context.Categories
-            //    .ProjectTo<CategoryDto>(_mapper.ConfigurationProvider)
-            //    .FirstOrDefaultAsync(x => x.Id == getCategoryByIdVM.Id);
-
             var categoryEntity = await _db.GetRepository<Category>().GetById(getCategoryByIdVM.Id);
-            
+
             var categoryDto = _mapper.Map<Category, CategoryDto>(categoryEntity);
 
             result.Data = categoryDto;
+            _db.Dispose();
             return result;
         }
 
 
         [ValidationBehavior(typeof(CreateCategoryValidator))]
         public async Task<Result<int>> CreateCategory(CreateCategoryVM createCategoryVM)
-        {            
+        {
             var result = new Result<int>();
 
             var categoryEntity = _mapper.Map<CreateCategoryVM, Category>(createCategoryVM);
@@ -70,7 +72,8 @@ namespace Ahlatci.Shop.Application.Services.Implementation
             await _db.GetRepository<Category>().Add(categoryEntity);
             await _db.CommitAsync();
 
-            result.Data =  categoryEntity.Id;
+            result.Data = categoryEntity.Id;
+            _db.Dispose();
             return result;
         }
 
@@ -80,8 +83,6 @@ namespace Ahlatci.Shop.Application.Services.Implementation
         {
             var result = new Result<int>();
 
-            //Gönderilen id bilgisine karşılık gelen bir kategori var mı?
-            //var categoryExists = await _context.Categories.AnyAsync(x => x.Id == deleteCategoryVM.Id);
             var categoryExists = await _db.GetRepository<Category>().AnyAsync(x => x.Id == deleteCategoryVM.Id);
             if (!categoryExists)
             {
@@ -92,6 +93,7 @@ namespace Ahlatci.Shop.Application.Services.Implementation
             await _db.CommitAsync();
 
             result.Data = deleteCategoryVM.Id;
+            _db.Dispose();
             return result;
         }
 
@@ -113,6 +115,7 @@ namespace Ahlatci.Shop.Application.Services.Implementation
             await _db.CommitAsync();
 
             result.Data = updatedCategory.Id;
+            _db.Dispose();
             return result;
         }
 
