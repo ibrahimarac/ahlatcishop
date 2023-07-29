@@ -1,9 +1,11 @@
 using Ahlatci.Shop.Api.Filters;
 using Ahlatci.Shop.Application.Automappings;
+using Ahlatci.Shop.Application.Repositories;
 using Ahlatci.Shop.Application.Services.Abstraction;
 using Ahlatci.Shop.Application.Services.Implementation;
 using Ahlatci.Shop.Application.Validators.Categories;
 using Ahlatci.Shop.Persistence.Context;
+using Ahlatci.Shop.Persistence.Repositories;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -40,6 +42,9 @@ builder.Services.AddDbContext<AhlatciContext>(opt =>
 {
     opt.UseSqlServer(builder.Configuration.GetConnectionString("AhlatciShop"));
 });
+
+//Repository Registiraction
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 //Business Service Registiration
 builder.Services.AddScoped<ICategoryService, CategoryService>();

@@ -7,6 +7,7 @@ namespace Ahlatci.Shop.Application.Repositories
     {
         Task<List<T>> GetAllAsync();
         Task<List<T>> GetByFilterAsync(Expression<Func<T,bool>> filter);
+        Task<bool> AnyAsync(Expression<Func<T, bool>> filter);
         Task<T> GetById(object id);
         Task Add(T entity);
         Task Update(T entity);
