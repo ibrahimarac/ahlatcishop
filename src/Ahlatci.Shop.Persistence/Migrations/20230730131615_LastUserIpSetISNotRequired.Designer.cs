@@ -4,6 +4,7 @@ using Ahlatci.Shop.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ahlatci.Shop.Persistence.Migrations
 {
     [DbContext(typeof(AhlatciContext))]
-    partial class AhlatciContextModelSnapshot : ModelSnapshot
+    [Migration("20230730131615_LastUserIpSetISNotRequired")]
+    partial class LastUserIpSetISNotRequired
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,7 +53,6 @@ namespace Ahlatci.Shop.Persistence.Migrations
                         .HasColumnOrder(5);
 
                     b.Property<string>("LastUserIp")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("LAST_LOGIN_IP")
                         .HasColumnOrder(6);
@@ -60,11 +62,6 @@ namespace Ahlatci.Shop.Persistence.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("PASSWORD")
                         .HasColumnOrder(4);
-
-                    b.Property<int>("Role")
-                        .HasColumnType("int")
-                        .HasColumnName("ROLE_ID")
-                        .HasColumnOrder(7);
 
                     b.Property<string>("Username")
                         .IsRequired()

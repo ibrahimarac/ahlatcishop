@@ -9,9 +9,9 @@ namespace Ahlatci.Shop.Application.Repositories
         Task<IQueryable<T>> GetByFilterAsync(Expression<Func<T,bool>> filter);
         Task<bool> AnyAsync(Expression<Func<T, bool>> filter);
         Task<T> GetById(object id);
-        Task Add(T entity);
-        Task Update(T entity);
-        Task Delete(T entity);
-        Task Delete(object id);
+        void Add(T entity);
+        void Update(T entity);
+        void Delete(T entity);
+        void Delete(object id);
     }
 }

@@ -9,57 +9,54 @@ namespace Ahlatci.Shop.Persistence.Repositories
     public class Repository<T> : IRepository<T>
         where T : BaseEntity
     {
-        private readonly AhlatciContext _dbContext;
+        private readonly DbSet<T> _dbSet;
 
         public Repository(AhlatciContext dbContext)
         {
-            _dbContext = dbContext;
+            _dbSet = dbContext.Set<T>();
         }
 
         public async Task<IQueryable<T>> GetAllAsync()
         {
-            return await Task.FromResult(_dbContext.Set<T>());
+            return await Task.FromResult(_dbSet);
         }
 
         public async Task<IQueryable<T>> GetByFilterAsync(Expression<Func<T, bool>> filter)
         {
-            return await Task.FromResult(_dbContext.Set<T>().Where(filter));
+            return await Task.FromResult(_dbSet.Where(filter));
         }
 
         public async Task<T> GetById(object id)
         {
-            var entity = await _dbContext.Set<T>().FindAsync(id);
+            var entity = await _dbSet.FindAsync(id);
             return entity;
         }
 
         public async Task<bool> AnyAsync(Expression<Func<T, bool>> filter)
         {
-            return await _dbContext.Set<T>().AnyAsync(filter);
+            return await _dbSet.AnyAsync(filter);
         }
 
 
-        public async Task Add(T entity)
+        public void Add(T entity)
         {
-            await _dbContext.Set<T>().AddAsync(entity);
-            await _dbContext.SaveChangesAsync();
+            _dbSet.Add(entity);
         }
 
-        public async Task Update(T entity)
+        public void Update(T entity)
         {
-            _dbContext.Update(entity);
-            await _dbContext.SaveChangesAsync();
+            _dbSet.Update(entity);
         }
 
-        public async Task Delete(T entity)
+        public void Delete(T entity)
         {
-            _dbContext.Set<T>().Remove(entity);
-            await _dbContext.SaveChangesAsync();
+            _dbSet.Remove(entity);
         }
 
-        public async Task Delete(object id)
+        public void Delete(object id)
         {
-            await _dbContext.Set<T>().FindAsync(id);
-            await _dbContext.SaveChangesAsync();
+            var item = _dbSet.Find(id);
+            _dbSet.Remove(item);
         }
 
         

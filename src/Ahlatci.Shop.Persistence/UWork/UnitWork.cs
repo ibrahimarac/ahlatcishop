@@ -2,6 +2,7 @@
 using Ahlatci.Shop.Domain.Common;
 using Ahlatci.Shop.Domain.UWork;
 using Ahlatci.Shop.Persistence.Context;
+using Ahlatci.Shop.Persistence.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Ahlatci.Shop.Persistence.UWork
@@ -9,13 +10,11 @@ namespace Ahlatci.Shop.Persistence.UWork
     public class UnitWork : IUnitWork
     {
         private Dictionary<Type, object> _repositories;
-        private readonly IServiceProvider _serviceProvider;
         private readonly AhlatciContext _context;
 
-        public UnitWork(IServiceProvider serviceProvider, AhlatciContext context)
+        public UnitWork(AhlatciContext context)
         {
             _repositories = new Dictionary<Type, object>();
-            _serviceProvider = serviceProvider;
             _context = context;
         }
 
@@ -26,12 +25,16 @@ namespace Ahlatci.Shop.Persistence.UWork
         /// <returns></returns>
         public async Task<bool> CommitAsync()
         {
+            var result = false;
+
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
+                    var trackedEntities = _context.ChangeTracker.Entries<AuditableEntity>().ToList();
                     await _context.SaveChangesAsync();
-                    transaction.Commit();
+                    await transaction.CommitAsync();
+                    result = true;
                 }
                 catch
                 {
@@ -39,7 +42,7 @@ namespace Ahlatci.Shop.Persistence.UWork
                     throw;
                 }
             }
-            return true;
+            return result;
         }
 
 
@@ -58,14 +61,9 @@ namespace Ahlatci.Shop.Persistence.UWork
                 return (IRepository<T>)_repositories[typeof(IRepository<T>)];
             }
 
-            //Eğer bu repo ilgili UnitWork için hiç kullanılmamışsa tanımlı değildir.
-            //Burada DI içerisinden bu repo alınır ve bundan sonraki kullanımlarda ihtiyaç olabilir
-            //düşüncesi ile sınıf içerisindeki Dictionary'de saklanır.            
-            var scope = _serviceProvider.CreateScope();
-            var repository = scope.ServiceProvider.GetRequiredService<IRepository<T>>();
+            var repository =new Repository<T>(_context); 
             _repositories.Add(typeof(IRepository<T>), repository);
             return repository;
-
         }
 
 

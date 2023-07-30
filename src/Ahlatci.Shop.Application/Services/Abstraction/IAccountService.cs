@@ -1,9 +1,10 @@
 ﻿using Ahlatci.Shop.Application.Models.RequestModels.Accounts;
+using Ahlatci.Shop.Application.Wrapper;
 
 namespace Ahlatci.Shop.Application.Services.Abstraction
 {
     public interface IAccountService
     {
-        Task<bool> CreateUser(CreateUserVM createUserVM);
+        Task<Result<bool>> CreateUser(CreateUserVM createUserVM);
     }
 }

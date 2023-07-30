@@ -69,7 +69,7 @@ namespace Ahlatci.Shop.Application.Services.Implementation
 
             var categoryEntity = _mapper.Map<CreateCategoryVM, Category>(createCategoryVM);
 
-            await _db.GetRepository<Category>().Add(categoryEntity);
+            _db.GetRepository<Category>().Add(categoryEntity);
             await _db.CommitAsync();
 
             result.Data = categoryEntity.Id;
@@ -89,7 +89,7 @@ namespace Ahlatci.Shop.Application.Services.Implementation
                 throw new NotFoundException($"{deleteCategoryVM.Id} numaralı kategori bulunamadı.");
             }
 
-            await _db.GetRepository<Category>().Delete(deleteCategoryVM.Id);
+            _db.GetRepository<Category>().Delete(deleteCategoryVM.Id);
             await _db.CommitAsync();
 
             result.Data = deleteCategoryVM.Id;
@@ -111,7 +111,7 @@ namespace Ahlatci.Shop.Application.Services.Implementation
 
             var updatedCategory = _mapper.Map<UpdateCategoryVM, Category>(updateCategoryVM);
 
-            await _db.GetRepository<Category>().Update(updatedCategory);
+            _db.GetRepository<Category>().Update(updatedCategory);
             await _db.CommitAsync();
 
             result.Data = updatedCategory.Id;
