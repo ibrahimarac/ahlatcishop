@@ -26,6 +26,11 @@ namespace Ahlatci.Shop.Persistence.Repositories
             return await Task.FromResult(_dbSet.Where(filter));
         }
 
+        public async Task<T> GetSingleByFilterAsync(Expression<Func<T, bool>> filter)
+        {
+            return await _dbSet.FirstOrDefaultAsync(filter);
+        }
+
         public async Task<T> GetById(object id)
         {
             var entity = await _dbSet.FindAsync(id);

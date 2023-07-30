@@ -1,5 +1,6 @@
 ﻿using Ahlatci.Shop.Application.Behaviors;
 using Ahlatci.Shop.Application.Exceptions;
+using Ahlatci.Shop.Application.Models.Dtos.Accounts;
 using Ahlatci.Shop.Application.Models.RequestModels.Accounts;
 using Ahlatci.Shop.Application.Services.Abstraction;
 using Ahlatci.Shop.Application.Validators.Accounts;
@@ -23,8 +24,15 @@ namespace Ahlatci.Shop.Application.Services.Implementation
             _mapper = mapper;
             _uWork = uWork;
             _configuration = configuration;
+
         }
 
+        /// <summary>
+        /// Yeni bir kullanıcı oluşturmak için kullanılan metod
+        /// </summary>
+        /// <param name="createUserVM"></param>
+        /// <returns></returns>
+        /// <exception cref="AlreadyExistsException"></exception>
         [ValidationBehavior(typeof(CreateUserValidator))]
         public async Task<Result<bool>> CreateUser(CreateUserVM createUserVM)
         {
@@ -69,6 +77,30 @@ namespace Ahlatci.Shop.Application.Services.Implementation
                 accountEntity.CustomerId = customerEntity.Id;
                 result.Data = await _uWork.CommitAsync();
             }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gönderilen kullanıcı adı ve parola ile login işlemini gerçekleştirir.
+        /// </summary>
+        /// <param name="loginVM"></param>
+        /// <returns></returns>
+        /// <exception cref="NotFoundException"></exception>
+        public async Task<Result<TokenDto>> Login(LoginVM loginVM)
+        {
+            var result = new Result<TokenDto>();
+
+            var hashedPassword = CipherUtil.EncryptString(_configuration["AppSettings:SecretKey"], loginVM.Password);
+
+            var existsUser = await _uWork.GetRepository<Account>().GetSingleByFilterAsync(x => x.Username.Trim().ToUpper() == loginVM.Username.Trim().ToUpper() && x.Password == hashedPassword);
+
+            if(existsUser is null)
+            {
+                throw new NotFoundException("Kullanıcı adı veya parola hatalı.");
+            }
+
+            //Token'i üret ve return et.
 
             return result;
         }
