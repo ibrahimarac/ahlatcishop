@@ -53,6 +53,7 @@ builder.Services.AddScoped<IUnitWork, UnitWork>();
 
 //Business Service Registiration
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 //Automapper
 builder.Services.AddAutoMapper(typeof(DomainToDto), typeof(ViewModelToDomain));

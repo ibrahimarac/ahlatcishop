@@ -9,15 +9,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2-Infrastructure", "2-Infra
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3-Api", "3-Api", "{1B38C058-299F-4911-99A0-E5FDFC469746}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ahlatci.Shop.Domain", "Ahlatci.Shop.Domain\Ahlatci.Shop.Domain.csproj", "{EF7710EA-0D8E-4FEC-836D-F89E35E51751}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ahlatci.Shop.Domain", "Ahlatci.Shop.Domain\Ahlatci.Shop.Domain.csproj", "{EF7710EA-0D8E-4FEC-836D-F89E35E51751}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ahlatci.Shop.Application", "Ahlatci.Shop.Application\Ahlatci.Shop.Application.csproj", "{7B70CCF5-9522-410A-93BE-D90B806B6B2D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ahlatci.Shop.Application", "Ahlatci.Shop.Application\Ahlatci.Shop.Application.csproj", "{7B70CCF5-9522-410A-93BE-D90B806B6B2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ahlatci.Shop.Infrastructure", "Ahlatci.Shop.Infrastructure\Ahlatci.Shop.Infrastructure.csproj", "{DBE5C8D1-CDAB-4681-8EB6-9F857D33FEE3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ahlatci.Shop.Infrastructure", "Ahlatci.Shop.Infrastructure\Ahlatci.Shop.Infrastructure.csproj", "{DBE5C8D1-CDAB-4681-8EB6-9F857D33FEE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ahlatci.Shop.Persistence", "Ahlatci.Shop.Persistence\Ahlatci.Shop.Persistence.csproj", "{AACFB9B2-E633-4A4A-A4FF-C0B6DC321756}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ahlatci.Shop.Persistence", "Ahlatci.Shop.Persistence\Ahlatci.Shop.Persistence.csproj", "{AACFB9B2-E633-4A4A-A4FF-C0B6DC321756}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ahlatci.Shop.Api", "Ahlatci.Shop.Api\Ahlatci.Shop.Api.csproj", "{E86B5BC2-A9BE-4B57-B6A4-B2E34B4A6AB1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ahlatci.Shop.Api", "Ahlatci.Shop.Api\Ahlatci.Shop.Api.csproj", "{E86B5BC2-A9BE-4B57-B6A4-B2E34B4A6AB1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ahlatci.Shop.Utils", "Ahlatci.Shop.Utils\Ahlatci.Shop.Utils.csproj", "{F6EFEFAC-3FB6-4832-A8D3-4B38A49C3256}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{E86B5BC2-A9BE-4B57-B6A4-B2E34B4A6AB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E86B5BC2-A9BE-4B57-B6A4-B2E34B4A6AB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E86B5BC2-A9BE-4B57-B6A4-B2E34B4A6AB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6EFEFAC-3FB6-4832-A8D3-4B38A49C3256}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6EFEFAC-3FB6-4832-A8D3-4B38A49C3256}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6EFEFAC-3FB6-4832-A8D3-4B38A49C3256}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6EFEFAC-3FB6-4832-A8D3-4B38A49C3256}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +61,7 @@ Global
 		{DBE5C8D1-CDAB-4681-8EB6-9F857D33FEE3} = {2D7F1525-4C62-4957-8850-98AE6D4E19EA}
 		{AACFB9B2-E633-4A4A-A4FF-C0B6DC321756} = {2D7F1525-4C62-4957-8850-98AE6D4E19EA}
 		{E86B5BC2-A9BE-4B57-B6A4-B2E34B4A6AB1} = {1B38C058-299F-4911-99A0-E5FDFC469746}
+		{F6EFEFAC-3FB6-4832-A8D3-4B38A49C3256} = {2D7F1525-4C62-4957-8850-98AE6D4E19EA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7AD1F93A-34F0-4397-AB60-E8AA80E11230}
