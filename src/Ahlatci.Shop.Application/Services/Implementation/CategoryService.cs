@@ -103,13 +103,15 @@ namespace Ahlatci.Shop.Application.Services.Implementation
         {
             var result = new Result<int>();
 
-            var categoryExists = await _db.GetRepository<Category>().AnyAsync(x => x.Id == updateCategoryVM.Id);
-            if (!categoryExists)
+            var existsCategory = await _db.GetRepository<Category>().GetById(updateCategoryVM.Id);
+            if (existsCategory is null)
             {
                 throw new Exception($"{updateCategoryVM} numaralı kategori bulunamadı.");
             }
 
-            var updatedCategory = _mapper.Map<UpdateCategoryVM, Category>(updateCategoryVM);
+            //var updateCategory = _mapper.Map<UpdateCategoryVM,Category>(updateCategoryVM);
+
+            var updatedCategory = _mapper.Map(updateCategoryVM,existsCategory);
 
             _db.GetRepository<Category>().Update(updatedCategory);
             await _db.CommitAsync();
