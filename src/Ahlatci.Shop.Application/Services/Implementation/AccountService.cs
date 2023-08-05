@@ -10,6 +10,10 @@ using Ahlatci.Shop.Domain.UWork;
 using Ahlatci.Shop.Utils;
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace Ahlatci.Shop.Application.Services.Implementation
 {
@@ -56,27 +60,15 @@ namespace Ahlatci.Shop.Application.Services.Implementation
             var customerEntity = _mapper.Map<Customer>(createUserVM);
             //Gelen model Account türüne maplandi.
             var accountEntity = _mapper.Map<Account>(createUserVM);
-
+            //Kullanıcının parolasını şifreleyerek kaydedelim.
             accountEntity.Password = CipherUtil
                 .EncryptString(_configuration["AppSettings:SecretKey"], accountEntity.Password);
 
-            //Aşağıdaki işlemde Customer tablosundaki AccountId bilgisini başarıyla ayarlıyor.
-            //Ancak Account tablosundaki CustomerId bilgisini atayamıyor. Çünkü bu işlemler aynı
-            //transaction içerisinde gerçekleşir. SaveChanges çağrıldığında önce eklenen entity 
-            //Account olduğundan Customer tablosuna accountid bilgisini yazabiliyor. Ama Account
-            //eklenirken Customer henüz eklenmemiş oluyor.
+            accountEntity.Customer = customerEntity;
+
             _uWork.GetRepository<Customer>().Add(customerEntity);
             _uWork.GetRepository<Account>().Add(accountEntity);
-            accountEntity.Customer = customerEntity;
-            var customerAccountCreateResult = await _uWork.CommitAsync();
-
-            //Eğer her iki tabloya da kayıt eklenmişse eksik olan Account>CustomerId
-            //bilgisini burada ayarlıyoruz.
-            if (customerAccountCreateResult)
-            {
-                accountEntity.CustomerId = customerEntity.Id;
-                result.Data = await _uWork.CommitAsync();
-            }
+            result.Data = await _uWork.CommitAsync();
 
             return result;
         }
@@ -93,16 +85,55 @@ namespace Ahlatci.Shop.Application.Services.Implementation
 
             var hashedPassword = CipherUtil.EncryptString(_configuration["AppSettings:SecretKey"], loginVM.Password);
 
-            var existsUser = await _uWork.GetRepository<Account>().GetSingleByFilterAsync(x => x.Username.Trim().ToUpper() == loginVM.Username.Trim().ToUpper() && x.Password == hashedPassword);
+            var existsUser = await _uWork.GetRepository<Account>().GetSingleByFilterAsync(x => x.Username == loginVM.Username && x.Password == hashedPassword);
 
             if(existsUser is null)
             {
-                throw new NotFoundException("Kullanıcı adı veya parola hatalı.");
+                throw new NotFoundException($"{loginVM.Username} kullanıcı adına sahip kullanıcı bulunamadı ye da parola hatalıdır.");
             }
 
+            var expireMinute = Convert.ToInt32(_configuration["Jwt:Expire"]);
+            var expireDate = DateTime.Now.AddMinutes(expireMinute);
+
             //Token'i üret ve return et.
+            var tokenString = GenerateJwtToken(existsUser, expireDate);
+
+            result.Data = new TokenDto
+            {
+                Token = tokenString,
+                ExpireDate = expireDate
+            };
 
             return result;
+        }
+
+
+        private string GenerateJwtToken(Account account, DateTime expireDate)
+        {
+            var secretKey = _configuration["Jwt:SigningKey"];
+            var issuer = _configuration["Jwt:Issuer"];
+            var audiance = _configuration["Jwt:Audiance"];
+
+            var claims = new Claim[]
+            {
+                new Claim(ClaimTypes.Role,((int)account.Role).ToString()),
+                new Claim("Username",account.Username),
+                new Claim("Email",account.Customer.Email)
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(secretKey);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Audience=audiance,
+                Issuer=issuer,
+                Subject = new ClaimsIdentity(claims),
+                Expires = expireDate, // Token süresi (örn: 20 dakika)
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
     }
 }

@@ -4,7 +4,6 @@ namespace Ahlatci.Shop.Domain.Entities
 {
     public class Customer : AuditableEntity
     {
-        public int AccountId { get; set; }
         public int CityId { get; set; }
         public string IdentityNumber { get; set; }
         public string Name { get; set; }

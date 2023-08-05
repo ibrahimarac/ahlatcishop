@@ -26,8 +26,15 @@ namespace Ahlatci.Shop.Api.Controllers
         [HttpPost("create")]
         public async Task<ActionResult<Result<int>>> CreateUser(CreateUserVM createUserVM)
         {
-            var categoryId = await _accountService.CreateUser(createUserVM);
-            return Ok(categoryId);
+            var result = await _accountService.CreateUser(createUserVM);
+            return Ok(result);
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<Result<int>>> Login(LoginVM loginVM)
+        {
+            var result = await _accountService.Login(loginVM);
+            return Ok(result);
         }
 
     }
