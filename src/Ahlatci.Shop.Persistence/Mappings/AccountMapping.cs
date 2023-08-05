@@ -26,11 +26,13 @@ namespace Ahlatci.Shop.Persistence.Mappings
 
             builder.Property(x => x.LastLoginDate)
                 .HasColumnName("LAST_LOGIN_DATE")
+                .IsRequired(false)
                 .HasColumnOrder(5);
 
             builder.Property(x => x.LastUserIp)
                 .HasColumnType("nvarchar(50)")
                 .HasColumnName("LAST_LOGIN_IP")
+                .IsRequired(false)
                 .HasColumnOrder(6);
 
             builder.Property(x => x.Role)

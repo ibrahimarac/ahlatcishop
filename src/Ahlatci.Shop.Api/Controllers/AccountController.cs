@@ -1,8 +1,7 @@
-using Ahlatci.Shop.Application.Models.Dtos;
-using Ahlatci.Shop.Application.Models.RequestModels;
 using Ahlatci.Shop.Application.Models.RequestModels.Accounts;
 using Ahlatci.Shop.Application.Services.Abstraction;
 using Ahlatci.Shop.Application.Wrapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ahlatci.Shop.Api.Controllers
@@ -13,6 +12,7 @@ namespace Ahlatci.Shop.Api.Controllers
 
     [ApiController]
     [Route("account")]
+    [Authorize]
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
@@ -23,14 +23,15 @@ namespace Ahlatci.Shop.Api.Controllers
         }
 
         
-        [HttpPost("create")]
-        public async Task<ActionResult<Result<int>>> CreateUser(CreateUserVM createUserVM)
+        [HttpPost("register")]
+        public async Task<ActionResult<Result<int>>> Register(RegisterVM createUserVM)
         {
-            var result = await _accountService.CreateUser(createUserVM);
+            var result = await _accountService.Register(createUserVM);
             return Ok(result);
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<ActionResult<Result<int>>> Login(LoginVM loginVM)
         {
             var result = await _accountService.Login(loginVM);

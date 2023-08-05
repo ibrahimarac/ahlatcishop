@@ -6,7 +6,7 @@ namespace Ahlatci.Shop.Application.Services.Abstraction
 {
     public interface IAccountService
     {
-        Task<Result<bool>> CreateUser(CreateUserVM createUserVM);
+        Task<Result<bool>> Register(RegisterVM createUserVM);
 
         Task<Result<TokenDto>> Login(LoginVM loginVM);
     }

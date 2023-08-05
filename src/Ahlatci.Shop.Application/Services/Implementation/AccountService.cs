@@ -37,8 +37,8 @@ namespace Ahlatci.Shop.Application.Services.Implementation
         /// <param name="createUserVM"></param>
         /// <returns></returns>
         /// <exception cref="AlreadyExistsException"></exception>
-        [ValidationBehavior(typeof(CreateUserValidator))]
-        public async Task<Result<bool>> CreateUser(CreateUserVM createUserVM)
+        [ValidationBehavior(typeof(RegisterValidator))]
+        public async Task<Result<bool>> Register(RegisterVM createUserVM)
         {
             var result = new Result<bool>();
 
@@ -82,21 +82,28 @@ namespace Ahlatci.Shop.Application.Services.Implementation
         public async Task<Result<TokenDto>> Login(LoginVM loginVM)
         {
             var result = new Result<TokenDto>();
-
+            //Gelen parolayı şifrele. Çünkü db de şifreli parola var.
             var hashedPassword = CipherUtil.EncryptString(_configuration["AppSettings:SecretKey"], loginVM.Password);
-
-            var existsUser = await _uWork.GetRepository<Account>().GetSingleByFilterAsync(x => x.Username == loginVM.Username && x.Password == hashedPassword);
-
-            if(existsUser is null)
+            //Bu kullanıcı adı ve parola ile eşleşen bir kullanıcı var mı
+            var existsAccount = await _uWork.GetRepository<Account>().GetSingleByFilterAsync(x => x.Username == loginVM.Username && x.Password == hashedPassword);
+            //Kullanıcı yoksa hata fırlat.
+            if(existsAccount is null)
+            {
+                throw new NotFoundException($"{loginVM.Username} kullanıcı adına sahip kullanıcı bulunamadı ye da parola hatalıdır.");
+            }
+            //Bu account ile eşleşen kullanıcıyı bulalım.
+            var existsCustomer = await _uWork.GetRepository<Customer>().GetById(existsAccount.CustomerId);
+            if(existsCustomer is null)
             {
                 throw new NotFoundException($"{loginVM.Username} kullanıcı adına sahip kullanıcı bulunamadı ye da parola hatalıdır.");
             }
 
+            //Token expire (sona erme süresi) süresini belirle
             var expireMinute = Convert.ToInt32(_configuration["Jwt:Expire"]);
             var expireDate = DateTime.Now.AddMinutes(expireMinute);
 
             //Token'i üret ve return et.
-            var tokenString = GenerateJwtToken(existsUser, expireDate);
+            var tokenString = GenerateJwtToken(existsAccount, existsCustomer, expireDate);
 
             result.Data = new TokenDto
             {
@@ -108,7 +115,7 @@ namespace Ahlatci.Shop.Application.Services.Implementation
         }
 
 
-        private string GenerateJwtToken(Account account, DateTime expireDate)
+        private string GenerateJwtToken(Account account, Customer customer , DateTime expireDate)
         {
             var secretKey = _configuration["Jwt:SigningKey"];
             var issuer = _configuration["Jwt:Issuer"];
@@ -117,8 +124,9 @@ namespace Ahlatci.Shop.Application.Services.Implementation
             var claims = new Claim[]
             {
                 new Claim(ClaimTypes.Role,((int)account.Role).ToString()),
-                new Claim("Username",account.Username),
-                new Claim("Email",account.Customer.Email)
+                new Claim("username",account.Username),
+                new Claim("email",customer.Email),
+                new Claim("userId",customer.Id.ToString())
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -126,7 +134,7 @@ namespace Ahlatci.Shop.Application.Services.Implementation
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Audience=audiance,
-                Issuer=issuer,
+                Issuer=issuer,                
                 Subject = new ClaimsIdentity(claims),
                 Expires = expireDate, // Token süresi (örn: 20 dakika)
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
