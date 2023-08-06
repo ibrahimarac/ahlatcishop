@@ -16,19 +16,46 @@ namespace Ahlatci.Shop.Persistence.Repositories
             _dbSet = dbContext.Set<T>();
         }
 
-        public async Task<IQueryable<T>> GetAllAsync()
+        public async Task<IQueryable<T>> GetAllAsync(params string[] includeColumns)
         {
-            return await Task.FromResult(_dbSet);
+            IQueryable<T> query = _dbSet;
+
+            if (includeColumns.Any())
+            {
+                foreach (var includeColumn in includeColumns)
+                {
+                    query = query.Include(includeColumn);
+                }
+            }
+            return await Task.FromResult(query);
         }
 
-        public async Task<IQueryable<T>> GetByFilterAsync(Expression<Func<T, bool>> filter)
+        public async Task<IQueryable<T>> GetByFilterAsync(Expression<Func<T, bool>> filter, params string[] includeColumns)
         {
-            return await Task.FromResult(_dbSet.Where(filter));
+            IQueryable<T> query = _dbSet;
+
+            if (includeColumns.Any())
+            {
+                foreach (var includeColumn in includeColumns)
+                {
+                    query = query.Include(includeColumn);
+                }
+            }
+            return await Task.FromResult(query.Where(filter));
         }
 
-        public async Task<T> GetSingleByFilterAsync(Expression<Func<T, bool>> filter)
+        public async Task<T> GetSingleByFilterAsync(Expression<Func<T, bool>> filter, params string[] includeColumns)
         {
-            return await _dbSet.FirstOrDefaultAsync(filter);
+            IQueryable<T> query = _dbSet;
+
+            if (includeColumns.Any())
+            {
+                foreach (var includeColumn in includeColumns)
+                {
+                    query = query.Include(includeColumn);
+                }
+            }
+            return await query.FirstOrDefaultAsync(filter);
         }
 
         public async Task<T> GetById(object id)

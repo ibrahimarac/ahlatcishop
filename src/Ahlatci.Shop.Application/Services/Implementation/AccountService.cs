@@ -85,25 +85,19 @@ namespace Ahlatci.Shop.Application.Services.Implementation
             //Gelen parolayı şifrele. Çünkü db de şifreli parola var.
             var hashedPassword = CipherUtil.EncryptString(_configuration["AppSettings:SecretKey"], loginVM.Password);
             //Bu kullanıcı adı ve parola ile eşleşen bir kullanıcı var mı
-            var existsAccount = await _uWork.GetRepository<Account>().GetSingleByFilterAsync(x => x.Username == loginVM.Username && x.Password == hashedPassword);
+            var existsAccount = await _uWork.GetRepository<Account>().GetSingleByFilterAsync(x => x.Username == loginVM.Username && x.Password == hashedPassword, "Customer");
             //Kullanıcı yoksa hata fırlat.
             if(existsAccount is null)
             {
                 throw new NotFoundException($"{loginVM.Username} kullanıcı adına sahip kullanıcı bulunamadı ye da parola hatalıdır.");
             }
-            //Bu account ile eşleşen kullanıcıyı bulalım.
-            var existsCustomer = await _uWork.GetRepository<Customer>().GetById(existsAccount.CustomerId);
-            if(existsCustomer is null)
-            {
-                throw new NotFoundException($"{loginVM.Username} kullanıcı adına sahip kullanıcı bulunamadı ye da parola hatalıdır.");
-            }
-
+            
             //Token expire (sona erme süresi) süresini belirle
             var expireMinute = Convert.ToInt32(_configuration["Jwt:Expire"]);
             var expireDate = DateTime.Now.AddMinutes(expireMinute);
 
             //Token'i üret ve return et.
-            var tokenString = GenerateJwtToken(existsAccount, existsCustomer, expireDate);
+            var tokenString = GenerateJwtToken(existsAccount, expireDate);
 
             result.Data = new TokenDto
             {
@@ -136,7 +130,7 @@ namespace Ahlatci.Shop.Application.Services.Implementation
         }
 
 
-        private string GenerateJwtToken(Account account, Customer customer, DateTime expireDate)
+        private string GenerateJwtToken(Account account, DateTime expireDate)
         {
             var secretKey = _configuration["Jwt:SigningKey"];
             var issuer = _configuration["Jwt:Issuer"];
@@ -146,8 +140,8 @@ namespace Ahlatci.Shop.Application.Services.Implementation
             {
                 new Claim(ClaimTypes.Role,account.Role.ToString()),
                 new Claim(ClaimTypes.Name,account.Username),
-                new Claim(ClaimTypes.Email,customer.Email),
-                new Claim(ClaimTypes.Sid,customer.Id.ToString())
+                new Claim(ClaimTypes.Email,account.Customer.Email), //Account entity'sini Customer'a bağlayannavigation property
+                new Claim(ClaimTypes.Sid,account.CustomerId.ToString())
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
