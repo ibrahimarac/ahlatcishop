@@ -1,9 +1,7 @@
 ﻿using Ahlatci.Shop.Application.Models.RequestModels;
 using Ahlatci.Shop.Application.Models.RequestModels.Accounts;
 using Ahlatci.Shop.Domain.Entities;
-using Ahlatci.Shop.Utils;
 using AutoMapper;
-using Microsoft.Extensions.Configuration;
 
 namespace Ahlatci.Shop.Application.Automappings
 {
@@ -22,6 +20,8 @@ namespace Ahlatci.Shop.Application.Automappings
             CreateMap<RegisterVM, Customer>();
             CreateMap<RegisterVM, Account>()
                 .ForMember(x => x.Role, y => y.MapFrom(e => Roles.User));
+
+            CreateMap<UpdateUserVM, Customer>();
         }
     }
 }

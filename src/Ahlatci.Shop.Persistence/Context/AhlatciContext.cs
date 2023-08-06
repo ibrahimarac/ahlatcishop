@@ -1,13 +1,20 @@
 ﻿using Ahlatci.Shop.Domain.Common;
 using Ahlatci.Shop.Domain.Entities;
 using Ahlatci.Shop.Persistence.Mappings;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Ahlatci.Shop.Persistence.Context
 {
     public class AhlatciContext : DbContext
     {
-        public AhlatciContext(DbContextOptions<AhlatciContext> options) : base(options){ }
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public AhlatciContext(DbContextOptions<AhlatciContext> options, IHttpContextAccessor httpContextAccessor) : base(options)
+        {
+            _httpContextAccessor = httpContextAccessor;
+        }
 
         #region DbSet
 
@@ -62,17 +69,17 @@ namespace Ahlatci.Shop.Persistence.Context
                     //update
                     case EntityState.Modified:
                         entry.Entity.ModifiedDate = DateTime.Now;
-                        entry.Entity.ModifiedBy = "admin";
+                        entry.Entity.ModifiedBy = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x=>x.Type == ClaimTypes.Name)?.Value ?? "admin";
                         break;
                     //insert
                     case EntityState.Added:
                         entry.Entity.CreateDate = DateTime.Now;
-                        entry.Entity.CreatedBy = "admin";
+                        entry.Entity.CreatedBy = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value ?? "admin";
                         break;
                     //delete
                     case EntityState.Deleted:
                         entry.Entity.ModifiedDate = DateTime.Now;
-                        entry.Entity.ModifiedBy = "admin";
+                        entry.Entity.ModifiedBy = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value ?? "admin";
                         entry.Entity.IsDeleted = true;
                         entry.State = EntityState.Modified;
                         break;

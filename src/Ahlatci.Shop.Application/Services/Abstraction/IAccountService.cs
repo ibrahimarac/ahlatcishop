@@ -9,5 +9,7 @@ namespace Ahlatci.Shop.Application.Services.Abstraction
         Task<Result<bool>> Register(RegisterVM createUserVM);
 
         Task<Result<TokenDto>> Login(LoginVM loginVM);
+
+        Task<Result<bool>> UpdateUser(UpdateUserVM updateUserVM);
     }
 }

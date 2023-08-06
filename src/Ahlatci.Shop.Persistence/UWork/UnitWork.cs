@@ -31,7 +31,6 @@ namespace Ahlatci.Shop.Persistence.UWork
             {
                 try
                 {
-                    var trackedEntities = _context.ChangeTracker.Entries<AuditableEntity>().ToList();
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
                     result = true;

@@ -114,8 +114,29 @@ namespace Ahlatci.Shop.Application.Services.Implementation
             return result;
         }
 
+               
+        /// <summary>
+        /// Kullanıcı bilgilerini güncellemek için kullanılan servis metodu.
+        /// </summary>
+        /// <param name="updateUserVM"></param>
+        /// <returns></returns>
+        [ValidationBehavior(typeof(UpdateUserValidator))]
+        public async Task<Result<bool>> UpdateUser(UpdateUserVM updateUserVM)
+        {
+            var result = new Result<bool>();
 
-        private string GenerateJwtToken(Account account, Customer customer , DateTime expireDate)
+            var existsCustomer = await _uWork.GetRepository<Customer>().GetById(updateUserVM.Id.Value);
+
+            _mapper.Map(updateUserVM, existsCustomer);
+
+            _uWork.GetRepository<Customer>().Update(existsCustomer);
+            result.Data = await _uWork.CommitAsync();
+
+            return result;
+        }
+
+
+        private string GenerateJwtToken(Account account, Customer customer, DateTime expireDate)
         {
             var secretKey = _configuration["Jwt:SigningKey"];
             var issuer = _configuration["Jwt:Issuer"];
@@ -123,18 +144,18 @@ namespace Ahlatci.Shop.Application.Services.Implementation
 
             var claims = new Claim[]
             {
-                new Claim(ClaimTypes.Role,((int)account.Role).ToString()),
-                new Claim("username",account.Username),
-                new Claim("email",customer.Email),
-                new Claim("userId",customer.Id.ToString())
+                new Claim(ClaimTypes.Role,account.Role.ToString()),
+                new Claim(ClaimTypes.Name,account.Username),
+                new Claim(ClaimTypes.Email,customer.Email),
+                new Claim(ClaimTypes.Sid,customer.Id.ToString())
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(secretKey);
+            var key = Encoding.UTF8.GetBytes(secretKey);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Audience=audiance,
-                Issuer=issuer,                
+                Audience = audiance,
+                Issuer = issuer,
                 Subject = new ClaimsIdentity(claims),
                 Expires = expireDate, // Token süresi (örn: 20 dakika)
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

@@ -24,6 +24,7 @@ namespace Ahlatci.Shop.Api.Controllers
 
         
         [HttpPost("register")]
+        [AllowAnonymous]
         public async Task<ActionResult<Result<int>>> Register(RegisterVM createUserVM)
         {
             var result = await _accountService.Register(createUserVM);
@@ -35,6 +36,17 @@ namespace Ahlatci.Shop.Api.Controllers
         public async Task<ActionResult<Result<int>>> Login(LoginVM loginVM)
         {
             var result = await _accountService.Login(loginVM);
+            return Ok(result);
+        }
+
+        [HttpPut("update")]
+        public async Task<ActionResult<Result<int>>> UpdateUser(int? id, UpdateUserVM updateUserVM)
+        {
+            if(id != updateUserVM.Id)
+            {
+                return BadRequest();
+            }
+            var result = await _accountService.UpdateUser(updateUserVM);
             return Ok(result);
         }
 

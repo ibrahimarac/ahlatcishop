@@ -38,18 +38,36 @@ builder.Services.AddControllers(opt =>
     opt.Filters.Add(new ExceptionHandlerFilter());
 });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-
-builder.Services.AddSwaggerGen(opt =>
+builder.Services.AddSwaggerGen(c =>
 {
-    opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "JwtTokenWithIdentity", Version = "v1", Description = "JwtTokenWithIdentity test app" });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
     {
-        Description = "JWT Authorization header using the Bearer scheme.",
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer"
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter 'Bearer' [space] and then your valid token in the text input below.\r\n\r\nExample: \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"",
     });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = "Bearer"
+                                }
+                            },
+                            new string[] {}
+                    }
+                });
 });
+
+builder.Services.AddHttpContextAccessor();
 
 //DbContext Registiration
 builder.Services.AddDbContext<AhlatciContext>(opt =>
@@ -91,7 +109,7 @@ builder.Services.AddAuthentication(opt =>
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"], // Tokený oluþturan tarafýn adresi
             ValidAudience = builder.Configuration["Jwt:Audiance"], // Tokenýn kullanýlacaðý hedef adres
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["Jwt:SigningKey"])) // Gizli anahtar
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SigningKey"])) // Gizli anahtar
         };
     });
 
