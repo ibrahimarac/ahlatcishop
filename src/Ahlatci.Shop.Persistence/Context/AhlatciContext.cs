@@ -3,6 +3,7 @@ using Ahlatci.Shop.Domain.Entities;
 using Ahlatci.Shop.Domain.Services.Abstraction;
 using Ahlatci.Shop.Persistence.Mappings;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Ahlatci.Shop.Persistence.Context
 {
@@ -61,30 +62,41 @@ namespace Ahlatci.Shop.Persistence.Context
         {
             //Herhangi bir kayıt işleminde yapılan işlem ekleme ise CreateDate ve CreatedBy bilgileri otomatik olarak set edilir.
             //Herhangi bir kayıt işleminde yapılan işlem güncelleme ise ModifiedDate ve ModifiedBy bilgileri otomatik olarak set edilir.
-            foreach (var entry in ChangeTracker.Entries<AuditableEntity>().ToList())
+
+            var entries = ChangeTracker.Entries<BaseEntity>().ToList();
+
+            foreach (var entry in entries)
             {
-                switch (entry.State)
+                if(entry.State == EntityState.Deleted)
                 {
-                    //update
-                    case EntityState.Modified:
-                        entry.Entity.ModifiedDate = DateTime.Now;
-                        entry.Entity.ModifiedBy = _loggedUserService.Username ?? "admin";
-                        break;
-                    //insert
-                    case EntityState.Added:
-                        entry.Entity.CreateDate = DateTime.Now;
-                        entry.Entity.CreatedBy = _loggedUserService.Username ?? "admin";
-                        break;
-                    //delete
-                    case EntityState.Deleted:
-                        entry.Entity.ModifiedDate = DateTime.Now;
-                        entry.Entity.ModifiedBy = _loggedUserService.Username ?? "admin";
-                        entry.Entity.IsDeleted = true;
-                        entry.State = EntityState.Modified;
-                        break;
-                    default:
-                        break;
+                    entry.Entity.IsDeleted = true;
+                    entry.State = EntityState.Modified;
                 }
+
+                if(entry.Entity is AuditableEntity auditableEntity)
+                {
+                    switch (entry.State)
+                    {
+                        //update
+                        case EntityState.Modified:
+                            auditableEntity.ModifiedDate = DateTime.Now;
+                            auditableEntity.ModifiedBy = _loggedUserService.Username ?? "admin";
+                            break;
+                        //insert
+                        case EntityState.Added:
+                            auditableEntity.CreateDate = DateTime.Now;
+                            auditableEntity.CreatedBy = _loggedUserService.Username ?? "admin";
+                            break;
+                        //delete
+                        case EntityState.Deleted:
+                            auditableEntity.ModifiedDate = DateTime.Now;
+                            auditableEntity.ModifiedBy = _loggedUserService.Username ?? "admin";
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                
             }
 
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
