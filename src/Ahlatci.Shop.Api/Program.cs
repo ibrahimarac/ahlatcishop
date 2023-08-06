@@ -4,6 +4,8 @@ using Ahlatci.Shop.Application.Repositories;
 using Ahlatci.Shop.Application.Services.Abstraction;
 using Ahlatci.Shop.Application.Services.Implementation;
 using Ahlatci.Shop.Application.Validators.Categories;
+using Ahlatci.Shop.Domain.Services.Abstraction;
+using Ahlatci.Shop.Domain.Services.Implementation;
 using Ahlatci.Shop.Domain.UWork;
 using Ahlatci.Shop.Persistence.Context;
 using Ahlatci.Shop.Persistence.Repositories;
@@ -84,6 +86,7 @@ builder.Services.AddScoped<IUnitWork, UnitWork>();
 //Business Service Registiration
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<ILoggedUserService, LoggedUserService>();
 
 //Automapper
 builder.Services.AddAutoMapper(typeof(DomainToDto), typeof(ViewModelToDomain));
