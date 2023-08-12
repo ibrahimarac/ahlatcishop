@@ -1,6 +1,7 @@
 ﻿using Ahlatci.Shop.Application.Models.RequestModels;
 using Ahlatci.Shop.Application.Models.RequestModels.Accounts;
 using Ahlatci.Shop.Application.Models.RequestModels.Cities;
+using Ahlatci.Shop.Application.Models.RequestModels.ProductImages;
 using Ahlatci.Shop.Application.Models.RequestModels.Products;
 using Ahlatci.Shop.Domain.Entities;
 using AutoMapper;
@@ -36,6 +37,9 @@ namespace Ahlatci.Shop.Application.Automappings
                 .ForMember(x=>x.Name, y=>y.MapFrom(e=>e.Name.Trim()));
             CreateMap<UpdateProductVM, Product>()
                 .ForMember(x => x.Name, y => y.MapFrom(e => e.Name.Trim()));
+
+            //ProductImage
+            CreateMap<CreateProductImageVM, ProductImage>();
         }
     }
 }

@@ -1,8 +1,9 @@
-﻿using Ahlatci.Shop.Application.Exceptions;
+﻿using Ahlatci.Shop.Application.Behaviors;
+using Ahlatci.Shop.Application.Exceptions;
 using Ahlatci.Shop.Application.Models.Dtos.Products;
-using Ahlatci.Shop.Application.Models.RequestModels;
 using Ahlatci.Shop.Application.Models.RequestModels.Products;
 using Ahlatci.Shop.Application.Services.Abstraction;
+using Ahlatci.Shop.Application.Validators.Products;
 using Ahlatci.Shop.Application.Wrapper;
 using Ahlatci.Shop.Domain.Entities;
 using Ahlatci.Shop.Domain.UWork;
@@ -45,6 +46,7 @@ namespace Ahlatci.Shop.Application.Services.Implementation
             return result;
         }
 
+        [ValidationBehavior(typeof(GetProductByIdValidator))]
         public async Task<Result<ProductDto>> GetProductById(GetProductByIdVM getProductByIdVM)
         {
             var result = new Result<ProductDto>();
@@ -57,6 +59,7 @@ namespace Ahlatci.Shop.Application.Services.Implementation
         }
 
 
+        [ValidationBehavior(typeof(CreateProductValidator))]
         public async Task<Result<int>> CreateProduct(CreateProductVM createProductVM)
         {
             var result = new Result<int>();
@@ -75,6 +78,8 @@ namespace Ahlatci.Shop.Application.Services.Implementation
             return result;
         }
 
+
+        [ValidationBehavior(typeof(DeleteProductValidator))]
         public async Task<Result<int>> DeleteProduct(DeleteProductVM deleteProductVM)
         {
             var result = new Result<int>();
@@ -92,6 +97,8 @@ namespace Ahlatci.Shop.Application.Services.Implementation
             return result;
         }
 
+
+        [ValidationBehavior(typeof(UpdateProductValidator))]
         public async Task<Result<int>> UpdateProduct(UpdateProductVM updateProductVM)
         {
             var result = new Result<int>();
