@@ -2,6 +2,7 @@ using Ahlatci.Shop.Application.Models.Dtos;
 using Ahlatci.Shop.Application.Models.RequestModels;
 using Ahlatci.Shop.Application.Services.Abstraction;
 using Ahlatci.Shop.Application.Wrapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ahlatci.Shop.Api.Controllers
@@ -12,6 +13,7 @@ namespace Ahlatci.Shop.Api.Controllers
 
     [ApiController]
     [Route("category")]
+    [Authorize(Roles = "Admin")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
@@ -22,6 +24,7 @@ namespace Ahlatci.Shop.Api.Controllers
         }
 
         [HttpGet("get")]
+        [AllowAnonymous]
         public async Task<ActionResult<Result<List<CategoryDto>>>> GetAllCategories()
         {
             var categories = await _categoryService.GetAllCategories();
@@ -29,6 +32,7 @@ namespace Ahlatci.Shop.Api.Controllers
         }
 
         [HttpGet("get/{id:int}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Result<CategoryDto>>> GetCategoryById(int id)
         {
             var category = await _categoryService.GetCategoryById(new GetCategoryByIdVM { Id = id });

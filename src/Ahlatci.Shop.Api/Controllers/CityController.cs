@@ -2,6 +2,7 @@ using Ahlatci.Shop.Application.Models.Dtos.Cities;
 using Ahlatci.Shop.Application.Models.RequestModels.Cities;
 using Ahlatci.Shop.Application.Services.Abstraction;
 using Ahlatci.Shop.Application.Wrapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ahlatci.Shop.Api.Controllers
@@ -12,6 +13,7 @@ namespace Ahlatci.Shop.Api.Controllers
 
     [ApiController]
     [Route("city")]
+    [Authorize(Roles ="Admin")]
     public class CityController : ControllerBase
     {
         private readonly ICityService _cityService;
@@ -22,6 +24,7 @@ namespace Ahlatci.Shop.Api.Controllers
         }
 
         [HttpGet("get")]
+        [AllowAnonymous]
         public async Task<ActionResult<Result<List<CityDto>>>> GetAllCities()
         {
             var categories = await _cityService.GetAllCities();
@@ -29,6 +32,7 @@ namespace Ahlatci.Shop.Api.Controllers
         }
 
         [HttpGet("get/{id:int}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Result<CityDto>>> GetCityById(int id)
         {
             var category = await _cityService.GetCityById(id);
