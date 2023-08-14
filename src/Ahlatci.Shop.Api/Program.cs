@@ -138,13 +138,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+//Kalýcý olarak saklanacak dosyalar için kayýt yeri ayarlanýyor.
 app.UseStaticFiles();
-
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(
-        Path.Combine(Directory.GetCurrentDirectory(), @"images")),
-    RequestPath = new PathString("/images"),    
-});
 
 app.Run();
