@@ -13,6 +13,7 @@ using Ahlatci.Shop.Persistence.UWork;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -89,6 +90,7 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ILoggedUserService, LoggedUserService>();
 builder.Services.AddScoped<ICityService, CityService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IProductImageService, ProductImageService>();
 
 //Automapper
 builder.Services.AddAutoMapper(typeof(DomainToDto), typeof(ViewModelToDomain));
@@ -135,5 +137,14 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseStaticFiles();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), @"images")),
+    RequestPath = new PathString("/images"),    
+});
 
 app.Run();

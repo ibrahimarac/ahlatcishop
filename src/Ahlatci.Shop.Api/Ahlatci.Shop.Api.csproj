@@ -28,4 +28,8 @@
     <ProjectReference Include="..\Ahlatci.Shop.Application\Ahlatci.Shop.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="images\product-images\" />
+  </ItemGroup>
+
 </Project>

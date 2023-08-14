@@ -33,11 +33,6 @@ namespace Ahlatci.Shop.Application.Validators.Accounts
                 .NotEmpty().WithMessage("Telefon no bilgisi boş olamaz.")
                 .MaximumLength(13).WithMessage("Telefon no bilgisi 13 karakterden büyük olamaz.");
 
-            RuleFor(x => x.Email)
-                .NotEmpty().WithMessage("Eposta bilgisi boş olamaz.")
-                .MaximumLength(150).WithMessage("Eposta bilgisi 150 karakterden büyük olamaz.")
-                .EmailAddress().WithMessage("Geçerli bir eposta adresi girmediniz.");
-
             RuleFor(x => x.Birtdate)
                 .NotEmpty().WithMessage("Doğum tarihi bilgisi boş olamaz.");
 
@@ -58,7 +53,9 @@ namespace Ahlatci.Shop.Application.Validators.Accounts
                 .MaximumLength(10).WithMessage("Parola tekrar bilgisi 10 karakter olabilir.");
 
             RuleFor(x => x.Password)
-                .Matches(x => x.PasswordAgain).WithMessage("Parola ve parola tekrar bilgisi eşleşmiyor.");
+                .Equal(x => x.PasswordAgain)
+                .When(x => !String.IsNullOrWhiteSpace(x.Password))
+                .WithMessage("Parola ve parola tekrar bilgisi eşleşmiyor.");
 
         }
     }
