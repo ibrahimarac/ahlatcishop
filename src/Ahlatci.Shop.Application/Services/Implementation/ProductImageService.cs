@@ -109,7 +109,7 @@ namespace Ahlatci.Shop.Application.Services.Implementation
             await _unitWork.CommitAsync();
 
             //Fiziksel resim dosyası siliniyor.
-            var filePath = Path.Combine(_hostingEnvironment.ContentRootPath,existsProductImage.Path);
+            var filePath = Path.Combine(_hostingEnvironment.WebRootPath,existsProductImage.Path);
             if (File.Exists(filePath))
             {
                 File.Delete(filePath);
