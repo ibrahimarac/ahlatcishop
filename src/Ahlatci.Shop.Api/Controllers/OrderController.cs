@@ -21,7 +21,7 @@ namespace Ahlatci.Shop.Api.Controllers
         }
 
 
-        [HttpGet("getByCustomer/{id?:int}")]
+        [HttpGet("getByCustomer/{id:int?}")]
         [AllowAnonymous]
         public async Task<ActionResult<Result<List<OrderDto>>>> GetOrdersByCustomer(int? customerId)
         {

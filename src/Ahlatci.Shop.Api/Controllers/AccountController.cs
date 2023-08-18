@@ -1,3 +1,4 @@
+using Ahlatci.Shop.Application.Models.Dtos.Accounts;
 using Ahlatci.Shop.Application.Models.RequestModels.Accounts;
 using Ahlatci.Shop.Application.Services.Abstraction;
 using Ahlatci.Shop.Application.Wrapper;
@@ -33,7 +34,7 @@ namespace Ahlatci.Shop.Api.Controllers
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<ActionResult<Result<int>>> Login(LoginVM loginVM)
+        public async Task<ActionResult<Result<TokenDto>>> Login(LoginVM loginVM)
         {
             var result = await _accountService.Login(loginVM);
             return Ok(result);

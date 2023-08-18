@@ -1,7 +1,28 @@
+using Ahlatci.Shop.UI.Services.Abstraction;
+using Ahlatci.Shop.UI.Services.Implementation;
+using Ahlatci.Shop.UI.Validators.Accounts;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(opt=>opt.ModelValidatorProviders.Clear());
+
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddFluentValidationAutoValidation()
+    .AddFluentValidationClientsideAdapters();
+
+builder.Services.AddValidatorsFromAssemblyContaining(typeof(LoginValidator));
+
+builder.Services.AddSession(opt =>
+{
+    opt.IdleTimeout = TimeSpan.FromMinutes(20);
+});
+
+builder.Services.AddScoped<IRestService, RestService>();
+
 
 var app = builder.Build();
 
@@ -19,6 +40,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapControllerRoute(
     name: "admin",
