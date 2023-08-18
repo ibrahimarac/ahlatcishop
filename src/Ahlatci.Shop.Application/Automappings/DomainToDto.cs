@@ -2,6 +2,8 @@
 using Ahlatci.Shop.Application.Models.Dtos.Accounts;
 using Ahlatci.Shop.Application.Models.Dtos.Cities;
 using Ahlatci.Shop.Application.Models.Dtos.Customers;
+using Ahlatci.Shop.Application.Models.Dtos.OrderDetails;
+using Ahlatci.Shop.Application.Models.Dtos.Orders;
 using Ahlatci.Shop.Application.Models.Dtos.ProductImages;
 using Ahlatci.Shop.Application.Models.Dtos.Products;
 using Ahlatci.Shop.Domain.Entities;
@@ -23,9 +25,14 @@ namespace Ahlatci.Shop.Application.Automappings
 
             CreateMap<Product, ProductDto>();
             CreateMap<Product, ProductWithCategoryDto>();
+            CreateMap<Product, ProductWithImagesDto>();
 
             CreateMap<ProductImage, ProductImageDto>();
             CreateMap<ProductImage, ProductImageWithProductDto>();
+
+            CreateMap<Order, OrderDto>();
+
+            CreateMap<OrderDetail, OrderDetailDto>();
         }
     }
 }

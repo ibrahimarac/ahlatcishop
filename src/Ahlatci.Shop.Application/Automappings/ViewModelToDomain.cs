@@ -1,6 +1,8 @@
 ﻿using Ahlatci.Shop.Application.Models.RequestModels;
 using Ahlatci.Shop.Application.Models.RequestModels.Accounts;
 using Ahlatci.Shop.Application.Models.RequestModels.Cities;
+using Ahlatci.Shop.Application.Models.RequestModels.OrderDetails;
+using Ahlatci.Shop.Application.Models.RequestModels.Orders;
 using Ahlatci.Shop.Application.Models.RequestModels.ProductImages;
 using Ahlatci.Shop.Application.Models.RequestModels.Products;
 using Ahlatci.Shop.Domain.Entities;
@@ -40,6 +42,14 @@ namespace Ahlatci.Shop.Application.Automappings
 
             //ProductImage
             CreateMap<CreateProductImageVM, ProductImage>();
+
+            //Order
+            CreateMap<CreateOrderVM, Order>();
+            CreateMap<UpdateOrderVM, Order>();
+
+            //OrderDetail
+            CreateMap<CreateOrderDetailVM, OrderDetail>();
+
         }
     }
 }

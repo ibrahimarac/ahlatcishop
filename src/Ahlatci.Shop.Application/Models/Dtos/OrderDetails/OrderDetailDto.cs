@@ -1,5 +1,4 @@
-﻿using Ahlatci.Shop.Application.Models.Dtos.Orders;
-using Ahlatci.Shop.Application.Models.Dtos.Products;
+﻿using Ahlatci.Shop.Application.Models.Dtos.Products;
 
 namespace Ahlatci.Shop.Application.Models.Dtos.OrderDetails
 {
@@ -8,6 +7,7 @@ namespace Ahlatci.Shop.Application.Models.Dtos.OrderDetails
         public int Quantity { get; set; }
         public decimal TotalPrice { get; set; }
 
+        public CategoryDto Category { get; set; }
         public ProductDto Product { get; set; }
     }
 }
