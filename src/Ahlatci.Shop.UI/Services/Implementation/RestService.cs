@@ -15,6 +15,8 @@ namespace Ahlatci.Shop.UI.Services.Implementation
             _contextAccessor = contextAccessor;
         }
 
+        
+
         #region Post İstekleri
 
         /// <summary>
@@ -42,7 +44,7 @@ namespace Ahlatci.Shop.UI.Services.Implementation
                 restRequest.AddHeader("Authorization", $"Bearer {GetToken()}");
             }
 
-            var response = await restClient.ExecutePostAsync<TResponse>(restRequest);
+            var response = await restClient.ExecuteAsync<TResponse>(restRequest);
             return response;
         }
 
@@ -69,11 +71,89 @@ namespace Ahlatci.Shop.UI.Services.Implementation
                 restRequest.AddHeader("Authorization", $"Bearer {GetToken()}");
             }
 
-            var response = await restClient.ExecutePostAsync<TResponse>(restRequest);
+            var response = await restClient.ExecuteAsync<TResponse>(restRequest);
             return response;
         }
 
         #endregion
+
+        #region Get İstekleri
+
+        /// <summary>
+        /// Adres satırı üzerinden veri gönderilerek yapılan istekler
+        /// </summary>
+        /// <typeparam name="TResponse"></typeparam>
+        /// <param name="endpointUrl"></param>
+        /// <param name="tokenRequired"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<RestResponse<TResponse>> GetAsync<TResponse>(string endpointUrl, bool tokenRequired = true)
+        {
+            var apiUrl = _configuration["Api:Url"];
+
+            RestClient restClient = new RestClient(apiUrl);
+            RestRequest restRequest = new RestRequest(endpointUrl, Method.Get);
+
+            restRequest.AddHeader("Accept", "application/json");
+
+            if (tokenRequired && GetToken() != null)
+            {
+                restRequest.AddHeader("Authorization", $"Bearer {GetToken()}");
+            }
+
+            var response = await restClient.ExecuteAsync<TResponse>(restRequest);
+            return response;
+        }
+
+        #endregion
+
+        #region Delete İstekleri
+
+        public async Task<RestResponse<TResponse>> DeleteAsync<TResponse>(string endpointUrl, bool tokenRequired = true)
+        {
+            var apiUrl = _configuration["Api:Url"];
+
+            RestClient restClient = new RestClient(apiUrl);
+            RestRequest restRequest = new RestRequest(endpointUrl, Method.Delete);
+
+            restRequest.AddHeader("Accept", "application/json");
+
+            if (tokenRequired && GetToken() != null)
+            {
+                restRequest.AddHeader("Authorization", $"Bearer {GetToken()}");
+            }
+
+            var response = await restClient.ExecuteAsync<TResponse>(restRequest);
+            return response;
+        }
+
+        #endregion
+
+        #region Put İstekleri
+
+        public async Task<RestResponse<TResponse>> PutAsync<TRequest, TResponse>(TRequest requestModel, string endpointUrl, bool tokenRequired = true)
+        {
+            var apiUrl = _configuration["Api:Url"];
+            var jsonModel = JsonConvert.SerializeObject(requestModel);
+
+            RestClient restClient = new RestClient(apiUrl);
+            RestRequest restRequest = new RestRequest(endpointUrl, Method.Put);
+
+            restRequest.AddParameter("application/json", jsonModel, ParameterType.RequestBody);
+            restRequest.AddHeader("Accept", "application/json");
+
+            if (tokenRequired && GetToken() != null)
+            {
+                restRequest.AddHeader("Authorization", $"Bearer {GetToken()}");
+            }
+
+            var response = await restClient.ExecuteAsync<TResponse>(restRequest);
+            return response;
+        }
+
+        #endregion
+
+
 
         #region Private Methods
 

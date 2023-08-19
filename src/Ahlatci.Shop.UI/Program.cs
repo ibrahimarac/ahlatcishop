@@ -3,6 +3,7 @@ using Ahlatci.Shop.UI.Services.Implementation;
 using Ahlatci.Shop.UI.Validators.Accounts;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,8 @@ builder.Services.AddFluentValidationAutoValidation()
     .AddFluentValidationClientsideAdapters();
 
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(LoginValidator));
+
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 builder.Services.AddSession(opt =>
 {

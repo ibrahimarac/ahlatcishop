@@ -24,7 +24,6 @@ namespace Ahlatci.Shop.Api.Controllers
         }
 
         [HttpGet("get")]
-        [AllowAnonymous]
         public async Task<ActionResult<Result<List<CategoryDto>>>> GetAllCategories()
         {
             var categories = await _categoryService.GetAllCategories();
@@ -32,7 +31,6 @@ namespace Ahlatci.Shop.Api.Controllers
         }
 
         [HttpGet("get/{id:int}")]
-        [AllowAnonymous]
         public async Task<ActionResult<Result<CategoryDto>>> GetCategoryById(int id)
         {
             var category = await _categoryService.GetCategoryById(new GetCategoryByIdVM { Id = id });

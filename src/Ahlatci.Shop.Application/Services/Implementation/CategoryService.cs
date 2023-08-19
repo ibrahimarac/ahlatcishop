@@ -67,6 +67,12 @@ namespace Ahlatci.Shop.Application.Services.Implementation
         {
             var result = new Result<int>();
 
+            var categoryExistsSameName = await _db.GetRepository<Category>().AnyAsync(x => x.Name == createCategoryVM.CategoryName);
+            if (categoryExistsSameName)
+            {
+                throw new AlreadyExistsException($"{createCategoryVM.CategoryName} isminde bir kategori zaten mevcut.");
+            }
+
             var categoryEntity = _mapper.Map<CreateCategoryVM, Category>(createCategoryVM);
 
             _db.GetRepository<Category>().Add(categoryEntity);

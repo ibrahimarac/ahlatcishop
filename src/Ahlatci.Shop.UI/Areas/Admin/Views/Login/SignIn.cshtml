@@ -29,12 +29,19 @@
         <!-- /.login-logo -->
         <div class="card">
             <div class="card-body login-card-body">
+                @{
+                    if (TempData["error"] != null)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @TempData["error"]
+                        </div>
+                    }
+                }
                 <p class="login-box-msg">Kullanıcı bilgileriniz</p>
-
                 <form asp-action="SignIn" asp-area="Admin" asp-controller="Login" method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="input-group mb-1">
-                        <input asp-for="Username" class="form-control" placeholder="Kullanıcı adınız" />
+                        <input asp-for="Username" class="form-control" placeholder="Kullanıcı adınız" value="customer2" />
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-user"></span>
@@ -43,7 +50,7 @@
                     </div>
                     <span asp-validation-for="Username" class="text-danger"></span>
                     <div class="input-group mb-1">
-                        <input asp-for="Password" class="form-control" type="password" placeholder="Parolanız" />
+                        <input asp-for="Password" class="form-control" type="password" value="12345" placeholder="Parolanız" />
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>
@@ -72,8 +79,8 @@
     <!-- AdminLTE App -->
     <script src="~/admin/dist/js/adminlte.min.js"></script>
     <!--ClientSide validation-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js" integrity="sha512-37T7leoNS06R80c8Ulq7cdCDU5MNQBwlYoy1TX/WUsLFC2eYNqtKlV0QjH7r8JpG/S0GUMZwebnVFLPd6SU5yg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js" integrity="sha512-o6XqxgrUsKmchwy9G5VRNWSSxTS4Urr4loO6/0hYdpWmFUfHqGzawGxeQGMDqYzxjY9sbktPbNlkIQJWagVZQg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js" integrity="sha512-37T7leoNS06R80c8Ulq7cdCDU5MNQBwlYoy1TX/WUsLFC2eYNqtKlV0QjH7r8JpG/S0GUMZwebnVFLPd6SU5yg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js" integrity="sha512-o6XqxgrUsKmchwy9G5VRNWSSxTS4Urr4loO6/0hYdpWmFUfHqGzawGxeQGMDqYzxjY9sbktPbNlkIQJWagVZQg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>*@
 
 </body>
 </html>

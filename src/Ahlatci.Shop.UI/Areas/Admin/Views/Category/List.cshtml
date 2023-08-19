@@ -1,2 +1,66 @@
-﻿
-Kategori düzenleme sayfası
+﻿@model IEnumerable<CategoryDto>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="tr-@item.Id">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.ActionLink("Güncelle", "Edit","Category", new { Area="Admin", id=item.Id }, new{@class="btn btn-success"})
+                    <a href="#" data-id="@item.Id" class="btn btn-danger btnDelete">Sil</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@section Scripts{
+<script>
+
+    $().ready(function(){
+        $(".btnDelete").click(function(){
+            var id=$(this).attr('data-id')
+            console.log(id)
+            $.ajax({
+                type:"DELETE",
+                url:"/admin/category/delete/"+id,
+                dataType:"json",
+                contentType:"application/json;charset=utf-8",
+                success:function(response){
+                    console.log(response)
+                    if(response.success){
+                        var tdClassName="tr-"+id
+                        $("."+tdClassName).fadeOut('slow',function(){
+                            $(this).remove()
+                        })
+                    }else{
+                        alert(response.errors[0])
+                    }
+                },
+                error:function(response){
+                    alert('İstek esnasından sonucu taraflı bir hata oluştu.')
+                }
+            })
+        })
+    })
+
+</script>
+}
