@@ -10,7 +10,7 @@ namespace Ahlatci.Shop.Api.Controllers
 
     [ApiController]
     [Route("product")]    
-    [Authorize("Admin")]
+    [Authorize(Roles ="Admin")]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;

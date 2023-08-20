@@ -102,7 +102,8 @@ namespace Ahlatci.Shop.Application.Services.Implementation
             result.Data = new TokenDto
             {
                 Token = tokenString,
-                ExpireDate = expireDate
+                ExpireDate = expireDate,
+                Role = existsAccount.Role
             };
 
             return result;

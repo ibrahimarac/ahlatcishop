@@ -1,6 +1,9 @@
-﻿using Ahlatci.Shop.UI.Services.Abstraction;
+﻿using Ahlatci.Shop.UI.Exceptions;
+using Ahlatci.Shop.UI.Models.Dtos.Accounts;
+using Ahlatci.Shop.UI.Services.Abstraction;
 using Newtonsoft.Json;
 using RestSharp;
+using System.Net;
 
 namespace Ahlatci.Shop.UI.Services.Implementation
 {
@@ -41,10 +44,11 @@ namespace Ahlatci.Shop.UI.Services.Implementation
 
             if (tokenRequired && GetToken() != null)
             {
-                restRequest.AddHeader("Authorization", $"Bearer {GetToken()}");
+                restRequest.AddHeader("Authorization", $"Bearer {GetToken().Token}");
             }
 
             var response = await restClient.ExecuteAsync<TResponse>(restRequest);
+            CheckResponse(response);
             return response;
         }
 
@@ -68,10 +72,11 @@ namespace Ahlatci.Shop.UI.Services.Implementation
 
             if (tokenRequired && GetToken() != null)
             {
-                restRequest.AddHeader("Authorization", $"Bearer {GetToken()}");
+                restRequest.AddHeader("Authorization", $"Bearer {GetToken().Token}");
             }
 
             var response = await restClient.ExecuteAsync<TResponse>(restRequest);
+            CheckResponse(response);
             return response;
         }
 
@@ -98,10 +103,11 @@ namespace Ahlatci.Shop.UI.Services.Implementation
 
             if (tokenRequired && GetToken() != null)
             {
-                restRequest.AddHeader("Authorization", $"Bearer {GetToken()}");
+                restRequest.AddHeader("Authorization", $"Bearer {GetToken().Token}");
             }
 
             var response = await restClient.ExecuteAsync<TResponse>(restRequest);
+            CheckResponse(response);
             return response;
         }
 
@@ -120,10 +126,11 @@ namespace Ahlatci.Shop.UI.Services.Implementation
 
             if (tokenRequired && GetToken() != null)
             {
-                restRequest.AddHeader("Authorization", $"Bearer {GetToken()}");
+                restRequest.AddHeader("Authorization", $"Bearer {GetToken().Token}");
             }
 
             var response = await restClient.ExecuteAsync<TResponse>(restRequest);
+            CheckResponse(response);
             return response;
         }
 
@@ -144,10 +151,11 @@ namespace Ahlatci.Shop.UI.Services.Implementation
 
             if (tokenRequired && GetToken() != null)
             {
-                restRequest.AddHeader("Authorization", $"Bearer {GetToken()}");
+                restRequest.AddHeader("Authorization", $"Bearer {GetToken().Token}");
             }
 
             var response = await restClient.ExecuteAsync<TResponse>(restRequest);
+            CheckResponse(response);
             return response;
         }
 
@@ -157,10 +165,25 @@ namespace Ahlatci.Shop.UI.Services.Implementation
 
         #region Private Methods
 
-        private string GetToken()
+        private TokenDto GetToken()
         {
             var sessionKey = _configuration["Application:SessionKey"];
-            return _contextAccessor.HttpContext.Session.GetString(sessionKey);
+            if (_contextAccessor.HttpContext.Session.GetString(sessionKey) is null)
+                return null;
+            var tokenDto = JsonConvert.DeserializeObject<TokenDto>(_contextAccessor.HttpContext.Session.GetString(sessionKey));
+            return tokenDto;
+        }
+
+        private void CheckResponse<TResponse>(RestResponse<TResponse> response)
+        {
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new UnauthenticatedException();
+            }
+            else if (response.StatusCode == HttpStatusCode.Forbidden)
+            {
+                throw new UnauthorizedException();
+            }
         }
 
         #endregion

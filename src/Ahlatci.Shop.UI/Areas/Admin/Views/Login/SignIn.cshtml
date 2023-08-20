@@ -4,6 +4,8 @@
     Layout = null;
 }
 
+@inject IHttpContextAccessor _contextAccessor
+
 
 <!DOCTYPE html>
 <html lang="tr">
@@ -38,7 +40,7 @@
                     }
                 }
                 <p class="login-box-msg">Kullanıcı bilgileriniz</p>
-                <form asp-action="SignIn" asp-area="Admin" asp-controller="Login" method="post">
+                <form action="/admin/login/signin@_contextAccessor.HttpContext.Request.QueryString.Value" method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="input-group mb-1">
                         <input asp-for="Username" class="form-control" placeholder="Kullanıcı adınız" value="customer2" />

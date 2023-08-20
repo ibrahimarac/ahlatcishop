@@ -3,6 +3,7 @@ using Ahlatci.Shop.UI.Models.RequestModels.Accounts;
 using Ahlatci.Shop.UI.Models.Wrapper;
 using Ahlatci.Shop.UI.Services.Abstraction;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Net;
 
 namespace Ahlatci.Shop.UI.Areas.Admin.Controllers
@@ -28,7 +29,7 @@ namespace Ahlatci.Shop.UI.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SignIn(LoginVM loginModel)
+        public async Task<IActionResult> SignIn(LoginVM loginModel, [FromQuery]string ReturnUrl)
         {
             //Model doğrulamasını geçemeyen kullanıcıyı buradan tekrar login sayfasına gönder.
             if (!ModelState.IsValid)
@@ -45,7 +46,11 @@ namespace Ahlatci.Shop.UI.Areas.Admin.Controllers
             else
             {
                 var sessionKey = _configuration["Application:SessionKey"];
-                _contextAccessor.HttpContext.Session.SetString(sessionKey, response.Data.Data.Token);
+                _contextAccessor.HttpContext.Session.SetString(sessionKey, JsonConvert.SerializeObject(response.Data.Data));
+                if(ReturnUrl != null)
+                {
+                    return Redirect(ReturnUrl);
+                }
                 return RedirectToAction("Index", "Home", new { Area = "Admin" });
             }
 

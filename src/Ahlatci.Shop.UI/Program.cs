@@ -1,14 +1,22 @@
+using Ahlatci.Shop.UI.Authorization;
+using Ahlatci.Shop.UI.Filters;
+using Ahlatci.Shop.UI.Models;
 using Ahlatci.Shop.UI.Services.Abstraction;
 using Ahlatci.Shop.UI.Services.Implementation;
 using Ahlatci.Shop.UI.Validators.Accounts;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews(opt=>opt.ModelValidatorProviders.Clear());
+builder.Services.AddControllersWithViews(opt=> {
+    opt.ModelValidatorProviders.Clear();
+    opt.Filters.Add(new ActionExceptionFilter());
+});
 
 builder.Services.AddHttpContextAccessor();
 
@@ -27,6 +35,40 @@ builder.Services.AddSession(opt =>
 builder.Services.AddScoped<IRestService, RestService>();
 
 
+//Authentication
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
+    opt =>
+    {
+        opt.LoginPath = "/admin/login/signin";
+    });
+
+
+//Authorization
+
+builder.Services.AddSingleton<IAuthorizationHandler, SessionBasedAccessHandler>();
+
+builder.Services.AddAuthorization(opt =>
+{
+    opt.AddPolicy("Admin", policy =>
+    {
+        policy.AddRequirements(new RoleAccessRequirement(Roles.Admin));
+    });
+
+    opt.AddPolicy("User", policy =>
+    {
+        policy.AddRequirements(new RoleAccessRequirement(Roles.User));
+    });
+
+    opt.AddPolicy("AdminOrUser", policy =>
+    {
+        policy.AddRequirements(new RoleAccessRequirement(Roles.Admin, Roles.User));
+    });
+
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -42,9 +84,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
-
 app.UseSession();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "admin",

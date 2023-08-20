@@ -3,12 +3,14 @@ using Ahlatci.Shop.UI.Models.RequestModels;
 using Ahlatci.Shop.UI.Models.Wrapper;
 using Ahlatci.Shop.UI.Services.Abstraction;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 namespace Ahlatci.Shop.UI.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Policy = "Admin")]
     public class CategoryController : Controller
     {
         private IRestService _restService;
@@ -39,17 +41,7 @@ namespace Ahlatci.Shop.UI.Areas.Admin.Controllers
             //Model validasyonu başarılı. Kaydı gerçekleştir.
             var response = await _restService.PostAsync<CreateCategoryVM, Result<int>>(categoryModel, "category/create");
 
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                TempData["error"] = "Devam etmek için sisteme giriş yapmanız gerekmektedir.";
-                return RedirectToAction("SignIn", "Login", new { Area = "Admin" });
-            }
-            else if (response.StatusCode == HttpStatusCode.Forbidden)
-            {
-                TempData["error"] = "Bu işlem için gerekli yetkiye sahip değilsiniz.";
-                return RedirectToAction("SignIn", "Login", new { Area = "Admin" });
-            }
-            else if (response.StatusCode == HttpStatusCode.BadRequest)
+            if (response.StatusCode == HttpStatusCode.BadRequest)
             {
                 ModelState.AddModelError("", response.Data.Errors[0]);
                 return View();
@@ -62,7 +54,6 @@ namespace Ahlatci.Shop.UI.Areas.Admin.Controllers
         }
 
 
-
         public async Task<IActionResult> List()
         {
             ViewBag.Header = "Kategori İşlemleri";
@@ -72,17 +63,7 @@ namespace Ahlatci.Shop.UI.Areas.Admin.Controllers
             //category/get
             var response = await _restService.GetAsync<Result<List<CategoryDto>>>("category/get");
 
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                TempData["error"] = "Devam etmek için sisteme giriş yapmanız gerekmektedir.";
-                return RedirectToAction("SignIn", "Login", new { Area = "Admin" });
-            }
-            else if (response.StatusCode == HttpStatusCode.Forbidden)
-            {
-                TempData["error"] = "Bu işlem için gerekli yetkiye sahip değilsiniz.";
-                return RedirectToAction("SignIn", "Login", new { Area = "Admin" });
-            }
-            else if (response.StatusCode == HttpStatusCode.BadRequest)
+            if (response.StatusCode == HttpStatusCode.BadRequest)
             {
                 ModelState.AddModelError("", "İşlem esnasında sunucu taraflı bir hata oluştu. Lütfen sistem yöneticinize başvurunuz.");
                 return View();
@@ -94,7 +75,6 @@ namespace Ahlatci.Shop.UI.Areas.Admin.Controllers
         }
 
 
-
         public async Task<IActionResult> Edit(int id)
         {
             ViewBag.Header = "Kategori İşlemleri";
@@ -103,17 +83,7 @@ namespace Ahlatci.Shop.UI.Areas.Admin.Controllers
             //ilgili kategoriyi bul ve View'e git
             var response = await _restService.GetAsync<Result<CategoryDto>>($"category/get/{id}");
 
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                TempData["error"] = "Devam etmek için sisteme giriş yapmanız gerekmektedir.";
-                return RedirectToAction("SignIn", "Login", new { Area = "Admin" });
-            }
-            else if (response.StatusCode == HttpStatusCode.Forbidden)
-            {
-                TempData["error"] = "Bu işlem için gerekli yetkiye sahip değilsiniz.";
-                return RedirectToAction("SignIn", "Login", new { Area = "Admin" });
-            }
-            else if (response.StatusCode == HttpStatusCode.BadRequest)
+            if (response.StatusCode == HttpStatusCode.BadRequest)
             {
                 ModelState.AddModelError("", response.Data.Errors[0]);
                 return View();
@@ -131,17 +101,7 @@ namespace Ahlatci.Shop.UI.Areas.Admin.Controllers
         {
             var response = await _restService.PutAsync<UpdateCategoryVM, Result<int>>(updateCategoryModel, $"category/update/{updateCategoryModel.Id}");
 
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                TempData["error"] = "Devam etmek için sisteme giriş yapmanız gerekmektedir.";
-                return RedirectToAction("SignIn", "Login", new { Area = "Admin" });
-            }
-            else if (response.StatusCode == HttpStatusCode.Forbidden)
-            {
-                TempData["error"] = "Bu işlem için gerekli yetkiye sahip değilsiniz.";
-                return RedirectToAction("SignIn", "Login", new { Area = "Admin" });
-            }
-            else if (response.StatusCode == HttpStatusCode.BadRequest)
+            if (response.StatusCode == HttpStatusCode.BadRequest)
             {
                 ModelState.AddModelError("", response.Data.Errors[0]);
                 return View();
@@ -156,7 +116,6 @@ namespace Ahlatci.Shop.UI.Areas.Admin.Controllers
 
 
 
-
         [HttpDelete]
         public async Task<IActionResult> Delete(int id)
         {
@@ -165,26 +124,7 @@ namespace Ahlatci.Shop.UI.Areas.Admin.Controllers
 
             var response = await _restService.DeleteAsync<Result<int>>($"category/delete/{id}");
 
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                return Json(new Result<int>
-                {
-                    Success = false,
-                    Errors = new List<string> { "Sisteme giriş yapmanız gerekmektedir." }
-                });
-            }
-            else if (response.StatusCode == HttpStatusCode.Forbidden)
-            {
-                return Json(new Result<int>
-                {
-                    Success = false,
-                    Errors = new List<string> { "Bu işlem için gerekli yetkiye sahip değilsiniz." }
-                });
-            }
-            else
-            {
-                return Json(response.Data);
-            }
+            return Json(response.Data);
 
         }
     }
