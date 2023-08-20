@@ -38,14 +38,14 @@ namespace Ahlatci.Shop.Api.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<ActionResult<Result<int>>> CreateProduct([FromForm]CreateProductImageVM createProductImageVM)
+        public async Task<ActionResult<Result<int>>> CreateProductImage([FromForm]CreateProductImageVM createProductImageVM)
         {
             var result = await _productImageService.CreateProductImage(createProductImageVM);
             return Ok(result);
         }
 
         [HttpDelete("delete/{id:int?}")]
-        public async Task<ActionResult<Result<int>>> DeleteProduct(int? id)
+        public async Task<ActionResult<Result<int>>> DeleteProductImage(int? id)
         {
             var result = await _productImageService.DeleteProductImage(new DeleteProductImageVM { Id = id});
             return Ok(result);

@@ -186,6 +186,37 @@ namespace Ahlatci.Shop.UI.Services.Implementation
             }
         }
 
+        public async Task<RestResponse<TResponse>> PostFormAsync<TResponse>(Dictionary<string, string> formValues, string endpointUrl, IFormFile file, bool tokenRequired = true)
+        {
+            var apiUrl = _configuration["Api:Url"];
+
+            RestClient restClient = new RestClient(apiUrl);
+            RestRequest restRequest = new RestRequest(endpointUrl, Method.Post);
+
+            
+            restRequest.AddHeader("Accept", "application/json");
+            restRequest.AddHeader("Content-Type", "multipart/form-data");
+
+            foreach (var formValueKey in formValues.Keys)
+            {
+                restRequest.AddParameter(formValueKey, formValues[formValueKey]);
+            }
+
+            if (file != null)
+            {
+                restRequest.AddFile("UploadedImage", file.FileName);
+            }            
+
+            if (tokenRequired && GetToken() != null)
+            {
+                restRequest.AddHeader("Authorization", $"Bearer {GetToken().Token}");
+            }
+
+            var response = await restClient.ExecuteAsync<TResponse>(restRequest);
+            CheckResponse(response);
+            return response;
+        }
+
         #endregion
     }
 }

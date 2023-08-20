@@ -1,0 +1,31 @@
+﻿@model CreateProductImageVM
+
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create"  enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input asp-for="ProductId" type="hidden" class="form-control" />
+
+            <div class="form-group">
+                <label asp-for="UploadedImage" class="control-label"></label>
+                <input type="file" asp-for="UploadedImage" class="form-control" />
+                <span asp-validation-for="UploadedImage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Order" class="control-label"></label>
+                <input asp-for="Order" class="form-control" />
+                <span asp-validation-for="Order" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsThumbnail" class="control-label"></label>
+                <input asp-for="IsThumbnail" class="form-control" />
+                <span asp-validation-for="IsThumbnail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Ekle" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>

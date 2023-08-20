@@ -1,6 +1,8 @@
 ﻿
 @model IEnumerable<ProductWithCategoryDto>
 
+
+
 <table class="table">
     <thead>
         <tr>
@@ -42,6 +44,12 @@
                     @Html.DisplayFor(modelItem => item.UnitPrice)
                 </td>
                 <td>
+                    <a href="@Url.Action("List","ProductImage",new{Area="Admin",productId = item.Id})" class="nav-link">
+                        <i class="far fa-image"></i>
+                        <p>
+                            Resim Yönetimi
+                        </p>
+                    </a>
                     @Html.ActionLink("Güncelle", "Edit","Product", new { Area="Admin", id=item.Id }, new{@class="btn btn-success"})
                     <a href="#" data-id="@item.Id" class="btn btn-danger btnDelete">Sil</a>
                 </td>
