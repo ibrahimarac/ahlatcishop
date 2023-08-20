@@ -1,13 +1,6 @@
-using Ahlatci.Shop.UI.Authorization;
+using Ahlatci.Shop.UI.Configurations;
 using Ahlatci.Shop.UI.Filters;
-using Ahlatci.Shop.UI.Models;
-using Ahlatci.Shop.UI.Services.Abstraction;
-using Ahlatci.Shop.UI.Services.Implementation;
-using Ahlatci.Shop.UI.Validators.Accounts;
-using FluentValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,23 +13,22 @@ builder.Services.AddControllersWithViews(opt=> {
 
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddFluentValidationAutoValidation()
-    .AddFluentValidationClientsideAdapters();
+//Fluent Validation
+builder.Services.AddFluentValidationService();
 
-builder.Services.AddValidatorsFromAssemblyContaining(typeof(LoginValidator));
-
+//Automapper
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
+//Session
 builder.Services.AddSession(opt =>
 {
     opt.IdleTimeout = TimeSpan.FromMinutes(20);
 });
 
-builder.Services.AddScoped<IRestService, RestService>();
-
+//Custom Services
+builder.Services.AddDIServices();
 
 //Authentication
-
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
     opt =>
@@ -46,27 +38,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 
 //Authorization
-
-builder.Services.AddSingleton<IAuthorizationHandler, SessionBasedAccessHandler>();
-
-builder.Services.AddAuthorization(opt =>
-{
-    opt.AddPolicy("Admin", policy =>
-    {
-        policy.AddRequirements(new RoleAccessRequirement(Roles.Admin));
-    });
-
-    opt.AddPolicy("User", policy =>
-    {
-        policy.AddRequirements(new RoleAccessRequirement(Roles.User));
-    });
-
-    opt.AddPolicy("AdminOrUser", policy =>
-    {
-        policy.AddRequirements(new RoleAccessRequirement(Roles.Admin, Roles.User));
-    });
-
-});
+builder.Services.AddAuthorizationService();
 
 
 var app = builder.Build();
