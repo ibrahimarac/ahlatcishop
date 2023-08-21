@@ -5,6 +5,7 @@ using Ahlatci.Shop.UI.Services.Abstraction;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Text;
 
 namespace Ahlatci.Shop.UI.Areas.Admin.Controllers
 {
@@ -51,14 +52,25 @@ namespace Ahlatci.Shop.UI.Areas.Admin.Controllers
                 return View(productImageModel);
             }
 
-            var formValues = new Dictionary<string, string>
+            //Upload edilen resim dosyasını base64 string'e çevirerek istek yapacağımız modele ekleyelim.
+            var ms = new MemoryStream();
+            productImageModel.ImageFile.CopyTo(ms);
+            var fileAsByte = ms.ToArray();
+
+            var fileAsBase64String = Convert.ToBase64String(fileAsByte);
+            //Gelen modelde yer alan ve şu an null olan ilgili property'ye dosya içeriği
+            //base64 string olarak yazılır. Bu bilgiyi api bekliyor.
+            productImageModel.UploadedImage = fileAsBase64String;
+
+            var formData = new Dictionary<string, string>
             {
-                { "ProductId",productImageModel.ProductId.ToString()},
+                {"ProductId",productImageModel.ProductId.ToString() },
                 {"Order",productImageModel.Order.ToString() },
-                {"IsThumbnail",productImageModel.IsThumbnail.ToString() }
+                {"IsThumbnail",productImageModel.IsThumbnail.ToString() },
+                {"UploadedImage",productImageModel.UploadedImage }
             };
 
-            var response = await _restService.PostFormAsync<Result<int>>(formValues, "productImage/create", productImageModel.UploadedImage, true);
+            var response = await _restService.PostFormAsync<Result<int>>(formData, "productImage/create");
 
             if (response.StatusCode == HttpStatusCode.BadRequest)
             {
@@ -70,6 +82,19 @@ namespace Ahlatci.Shop.UI.Areas.Admin.Controllers
                 TempData["success"] = $"{response.Data.Data} numaralı kayıt başarıyla eklendi.";
                 return RedirectToAction("List", "ProductImage", new { Area = "Admin", ProductId=productImageModel.ProductId });
             }
+
+        }
+
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
+        {
+            //api endpointi çağır
+            //productImage/delete/id
+
+            var response = await _restService.DeleteAsync<Result<int>>($"productImage/delete/{id}");
+
+            return Json(response.Data);
 
         }
 

@@ -37,7 +37,7 @@ namespace Ahlatci.Shop.Api.Filters
 
             Log.Error(context.Exception,$"{context.HttpContext.Request.Path} adresi çağrılırken bir hata oluştu.");
 
-            context.Result = new JsonResult(result);
+            context.Result = new ObjectResult(result);
             context.HttpContext.Response.StatusCode = 400;
 
             context.ExceptionHandled = true;

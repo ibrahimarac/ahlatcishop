@@ -36,7 +36,6 @@ namespace Ahlatci.Shop.Application.Behaviors
 
             context.Proceed(); //Metod tetikleniyor
 
-
             //Metod çalıştıktan sonra devreye girecek kodlar.
         }
 

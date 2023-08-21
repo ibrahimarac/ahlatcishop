@@ -69,12 +69,18 @@ namespace Ahlatci.Shop.Application.Services.Implementation
                 throw new NotFoundException($"{createProductImageVM.ProductId} numaralı ürün bulunamadı.");
             }
             //Dosyanın ismi belirleniyor.
-            var fileName = PathUtil.GenerateFileName(createProductImageVM.UploadedImage);
+            var fileName = PathUtil.GenerateFileNameFromBase64File(createProductImageVM.UploadedImage);
             var filePath = Path.Combine(_hostingEnvironment.WebRootPath,_configuration["Paths:ProductImages"],fileName);
-            //Dosya fiziksel olarak kaydediliyor.
+
+            //Base64 string olarak gelen dosya byte dizisine çevriliyor.
+            var imageDataAsByteArray = Convert.FromBase64String(createProductImageVM.UploadedImage);
+            //byte dizisi FileStream'e yazmak üzere FileStream'e aktarılıyor.
+            var ms=new MemoryStream(imageDataAsByteArray);
+            ms.Position = 0;
+            
             using (FileStream fs = new FileStream(filePath, FileMode.Create))
             {
-                createProductImageVM.UploadedImage.CopyTo(fs);
+                ms.CopyTo(fs);
                 fs.Close();
             }
 
@@ -82,7 +88,7 @@ namespace Ahlatci.Shop.Application.Services.Implementation
 
             var productImageEntity = _mapper.Map<ProductImage>(createProductImageVM);            
             //images/product-images/14_8_2023_21_56_39_987.png
-            productImageEntity.Path = Path.Combine(_configuration["Paths:ProductImages"],fileName);
+            productImageEntity.Path = $"{_configuration["Paths:ProductImages"]}/{fileName}";
 
             //Dosyaya ait bilgileri dbye yaz.
             _unitWork.GetRepository<ProductImage>().Add(productImageEntity);

@@ -3,24 +3,34 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create"  enctype="multipart/form-data">
+        <form asp-action="Create" enctype="multipart/form-data" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <input asp-for="ProductId" type="hidden" class="form-control" />
 
             <div class="form-group">
-                <label asp-for="UploadedImage" class="control-label"></label>
-                <input type="file" asp-for="UploadedImage" class="form-control" />
-                <span asp-validation-for="UploadedImage" class="text-danger"></span>
+                <label asp-for="ImageFile" class="control-label"></label>
+                <input type="file" asp-for="ImageFile" class="form-control" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Order" class="control-label"></label>
                 <input asp-for="Order" class="form-control" />
                 <span asp-validation-for="Order" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="IsThumbnail" class="control-label"></label>
-                <input asp-for="IsThumbnail" class="form-control" />
+            <div class="form-check">
+
+                @{
+                    //Nullable bir bool alana checkbox bağlayamıyoruz.
+                    //Null ise null olmaktan kurtarıyoruz
+                    if (!Model.IsThumbnail.HasValue)
+                    {
+                        Model.IsThumbnail = false;
+                    }
+                }
+
+                @Html.EditorFor(m => m.IsThumbnail, new {@class="form-check-input"})
+                @Html.LabelFor(m=>m.IsThumbnail,new{@class="form-check-label"})
                 <span asp-validation-for="IsThumbnail" class="text-danger"></span>
             </div>
             <div class="form-group">

@@ -29,11 +29,29 @@ builder.Services.AddSession(opt =>
 builder.Services.AddDIServices();
 
 //Authentication
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
     opt =>
-    {
-        opt.LoginPath = "/admin/login/signin";
+    {        
+        opt.Events = new CookieAuthenticationEvents
+        {
+            OnRedirectToLogin = context =>
+            {
+                
+                //Eðer admin tarafýnda login olmadan yetki gerektiren bir sayfaya gitmeye çalýþýrsa admin login gelsin
+                if (context.Request.Path.Value.Contains("admin"))
+                {
+                    context.Response.Redirect("/admin/login/signin");
+                }
+                else //sunum projesinde ise o projeye ait login gelsin
+                {
+                    context.Response.Redirect("/login/signin");
+                }
+                return Task.CompletedTask;
+            }
+        };
+
     });
 
 
